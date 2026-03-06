@@ -939,13 +939,13 @@ var PROPS = [
 </script>
 <script>
 document.addEventListener("DOMContentLoaded", function(){
-  const pwd = document.querySelector('input[type="password"]');
-  if(!pwd) return;
-  pwd.focus();
-  pwd.addEventListener("keydown", function(e){
+  var input = document.getElementById("pi");
+  if(!input) return;
+  input.focus();
+  input.addEventListener("keydown", function(e){
     if(e.key === "Enter"){
-      const btn = document.querySelector("button");
-      if(btn){ btn.click(); }
+      e.preventDefault();
+      if(typeof doAuth === "function"){ doAuth(); }
     }
   });
 });
