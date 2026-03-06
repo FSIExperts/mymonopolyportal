@@ -1,0 +1,126 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>MyMonopoly Portal</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+body{
+margin:0;
+height:100vh;
+background:#050505;
+color:#f5edd9;
+font-family:Georgia,serif;
+display:flex;
+align-items:center;
+justify-content:center;
+overflow:hidden;
+}
+
+/* double lens */
+.lens{
+position:absolute;
+top:50%;
+width:220px;
+height:220px;
+border-radius:50%;
+background:#000;
+border:3px solid #c9a84c;
+transform:translateY(-50%);
+transition:all .7s ease;
+}
+
+.lens.left{ left:calc(50% - 120px); }
+.lens.right{ right:calc(50% - 120px); }
+
+body.open .lens.left{ transform:translate(-220px,-50%); }
+body.open .lens.right{ transform:translate(220px,-50%); }
+
+.portal{
+position:relative;
+z-index:10;
+background:#111;
+padding:40px;
+border:1px solid #c9a84c55;
+width:320px;
+text-align:center;
+}
+
+h1{ color:#c9a84c; }
+
+input{
+width:100%;
+padding:10px;
+margin:10px 0;
+background:#222;
+border:1px solid #444;
+color:white;
+}
+
+button{
+width:100%;
+padding:10px;
+background:#c9a84c;
+border:none;
+cursor:pointer;
+font-weight:bold;
+}
+
+.err{
+color:#e07070;
+font-size:12px;
+margin-top:8px;
+}
+</style>
+
+</head>
+
+<body>
+
+<div class="lens left"></div>
+<div class="lens right"></div>
+
+<div class="portal">
+
+<h1>MyMonopoly Portal</h1>
+
+<input id="pi" type="password" placeholder="Access Code">
+<button onclick="doAuth()">Enter</button>
+
+<div id="aerr" class="err"></div>
+
+</div>
+
+<script>
+
+var ADMIN=false;
+var APWD='bellaire2025';
+var IPWD='tarariver';
+
+function doAuth(){
+
+var v=document.getElementById('pi').value.trim().toLowerCase();
+
+if(v===APWD || v===IPWD){
+
+document.body.classList.add("open");
+
+setTimeout(function(){
+window.location.href="tara-cards-dashboard.html";
+},700);
+
+}else{
+
+document.getElementById('aerr').innerText='Incorrect code';
+document.getElementById('pi').value='';
+
+}
+
+}
+
+</script>
+
+</body>
+</html>

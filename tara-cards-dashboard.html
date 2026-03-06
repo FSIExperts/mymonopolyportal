@@ -1,0 +1,874 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>ANAND Holdings, LLC</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --gold:#C9A84C;--gold-lt:#E8C97A;--gold-dk:#8B6914;
+  --black:#0A0A0A;--char:#161616;--char2:#1E1E1E;
+  --cream:#F5EDD9;--cream2:#DDD0B0;--silver:#A0A0A0;
+  --green:#2ECC71;--red:#E07070;--blue:#4A8B9B;
+  --tb:#CD7F32;--ts:#C0C0C0;--tg:#C9A84C;--tp:#E5E4E2;--tk:#777;--to:#9B6FD4;
+  --cw:560px;--ch:780px;--gap:28px;
+}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--black);min-height:100vh;font-family:"Cormorant Garamond",serif;color:var(--cream);overflow-x:hidden;}
+
+/* LOGIN */
+#ls{position:fixed;inset:0;background:var(--black);display:flex;align-items:center;justify-content:center;z-index:9999;}
+.lb{display:flex;flex-direction:column;align-items:center;gap:16px;width:min(340px,90vw);}
+.ll{font-family:"Playfair Display",serif;font-size:64px;font-weight:900;background:linear-gradient(160deg,var(--gold-lt),var(--gold),var(--gold-dk));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:-3px;}
+.ln{font-family:"Playfair Display",serif;font-size:22px;font-weight:700;color:var(--cream);text-align:center;}
+.ls2{font-family:"Courier Prime",monospace;font-size:9px;letter-spacing:5px;text-transform:uppercase;color:var(--gold);opacity:.6;margin-bottom:14px;}
+.lb input{width:100%;padding:15px 18px;background:var(--char);border:1px solid rgba(201,168,76,.3);color:var(--cream);font-family:"Courier Prime",monospace;font-size:20px;letter-spacing:8px;text-align:center;outline:none;border-radius:2px;transition:border-color .2s;}
+.lb input:focus{border-color:var(--gold);}
+.lb input::placeholder{letter-spacing:3px;font-size:12px;opacity:.4;}
+.lb button{width:100%;padding:15px;background:var(--gold);color:var(--black);border:none;cursor:pointer;font-family:"Courier Prime",monospace;font-size:11px;letter-spacing:4px;text-transform:uppercase;border-radius:2px;transition:background .2s;}
+.lb button:hover{background:var(--gold-lt);}
+.lerr{font-family:"Courier Prime",monospace;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--red);min-height:18px;}
+
+/* ADMIN BANNER */
+#ab{display:none;align-items:center;justify-content:space-between;background:rgba(201,168,76,.08);border-bottom:1px solid rgba(201,168,76,.2);padding:8px 28px;}
+#ab.on{display:flex;}
+.abm{font-family:"Courier Prime",monospace;font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--gold);opacity:.7;}
+.lo{background:none;border:1px solid rgba(201,168,76,.3);color:var(--gold);padding:5px 14px;cursor:pointer;font-family:"Courier Prime",monospace;font-size:8px;letter-spacing:2px;text-transform:uppercase;}
+.lo:hover{background:var(--gold);color:var(--black);}
+
+/* HEADER */
+header{text-align:center;padding:20px 20px 12px;}
+.btag{font-family:"Courier Prime",monospace;font-size:10px;letter-spacing:6px;text-transform:uppercase;color:var(--gold);opacity:.7;margin-bottom:6px;}
+h1{font-family:"Playfair Display",serif;font-size:clamp(32px,4vw,58px);font-weight:900;background:linear-gradient(135deg,var(--gold-lt),var(--gold),var(--gold-dk));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:-1px;margin-bottom:4px;}
+.hs{font-style:italic;font-size:15px;color:var(--cream2);opacity:.55;margin-bottom:14px;}
+
+/* FILTER TABS */
+.tabs{display:flex;justify-content:center;gap:6px;flex-wrap:wrap;margin-bottom:10px;padding:0 16px;}
+.tab{font-family:"Courier Prime",monospace;font-size:9px;letter-spacing:3px;text-transform:uppercase;padding:8px 16px;border:1px solid rgba(201,168,76,.3);background:transparent;color:var(--gold);cursor:pointer;transition:all .2s;}
+.tab:hover,.tab.act{background:var(--gold);color:var(--black);border-color:var(--gold);}
+
+/* PORTFOLIO SUMMARY */
+.sw{margin:0 20px 12px;border:1px solid rgba(201,168,76,.18);border-radius:6px;overflow:hidden;}
+.st2{width:100%;display:flex;justify-content:space-between;align-items:center;padding:10px 20px;background:rgba(201,168,76,.06);border:none;cursor:pointer;font-family:"Courier Prime",monospace;font-size:9px;letter-spacing:4px;text-transform:uppercase;color:var(--gold);}
+.sa{font-size:14px;transition:transform .3s;opacity:.6;}
+.sw.op .sa{transform:rotate(180deg);}
+.sb{display:none;padding:16px 20px 18px;background:var(--char);}
+.sw.op .sb{display:block;}
+.sg{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:16px;}
+.si{border-left:2px solid rgba(201,168,76,.2);padding-left:12px;}
+.sil{font-family:"Courier Prime",monospace;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--gold);opacity:.55;margin-bottom:3px;}
+.siv{font-family:"Playfair Display",serif;font-size:26px;font-weight:700;color:var(--cream);line-height:1;}
+.sis{font-style:italic;font-size:13px;color:var(--silver);}
+.tl{margin-top:14px;padding-top:12px;border-top:1px solid rgba(201,168,76,.1);}
+.tlt{font-family:"Courier Prime",monospace;font-size:8px;letter-spacing:3px;text-transform:uppercase;color:var(--gold);opacity:.45;margin-bottom:8px;}
+.tli{display:flex;gap:12px;flex-wrap:wrap;}
+.tlic{display:flex;align-items:center;gap:5px;}
+.tlisw{width:11px;height:11px;border-radius:2px;}
+.tlil{font-family:"Courier Prime",monospace;font-size:8px;letter-spacing:1px;text-transform:uppercase;color:var(--silver);opacity:.7;}
+
+/* CARD SIZE TOGGLE */
+.sizetog{display:flex;justify-content:center;gap:8px;margin-bottom:10px;}
+.stbtn{font-family:"Courier Prime",monospace;font-size:8px;letter-spacing:2px;text-transform:uppercase;padding:5px 14px;border:1px solid rgba(201,168,76,.25);background:transparent;color:var(--gold);opacity:.5;cursor:pointer;transition:all .2s;}
+.stbtn.act{opacity:1;background:rgba(201,168,76,.1);border-color:var(--gold);}
+
+/* SCROLL TRACK */
+.trw{position:relative;padding-bottom:20px;}
+.trw::before,.trw::after{content:"";position:absolute;top:0;bottom:20px;width:60px;z-index:10;pointer-events:none;}
+.trw::before{left:0;background:linear-gradient(to right,var(--black),transparent);}
+.trw::after{right:0;background:linear-gradient(to left,var(--black),transparent);}
+.tr{display:flex;gap:var(--gap);overflow-x:auto;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;padding:16px 64px;scrollbar-width:none;}
+.tr::-webkit-scrollbar{display:none;}
+.arr{position:absolute;top:calc(50% - 18px);width:40px;height:40px;border-radius:50%;background:rgba(22,22,22,.95);border:1px solid rgba(201,168,76,.35);color:var(--gold);font-size:22px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;z-index:20;}
+.arr:hover{background:var(--gold);color:var(--black);}
+.arl{left:12px;}.arr2{right:12px;}
+
+/* CARD STRUCTURE */
+.cs{flex-shrink:0;width:var(--cw);scroll-snap-align:start;}
+.cs.hid{display:none;}
+.cw2{width:var(--cw);height:var(--ch);overflow:hidden;border-radius:14px;}
+.card{display:flex;flex-direction:row;width:calc(var(--cw) * 3);height:var(--ch);transition:transform .55s cubic-bezier(.4,.0,.2,1);}
+.cs.p1 .card{transform:translateX(calc(var(--cw) * -1));}
+.cs.p2 .card{transform:translateX(calc(var(--cw) * -2));}
+.face{flex-shrink:0;width:var(--cw);height:var(--ch);border-radius:14px;overflow:hidden;display:flex;flex-direction:column;}
+.f1{}.f2{}.f3{}
+
+/* TIER COLORS */
+[data-tier="bronze"]{--tc:var(--tb);}
+[data-tier="silver"]{--tc:var(--ts);}
+[data-tier="gold"]{--tc:var(--tg);}
+[data-tier="platinum"]{--tc:var(--tp);}
+[data-tier="black"]{--tc:var(--tk);}
+[data-tier="obsidian"]{--tc:var(--to);}
+[data-tier="tbd"]{--tc:var(--silver);}
+
+/* NAV BAR — fixed top of every panel */
+.cnav{flex-shrink:0;display:flex;align-items:center;justify-content:space-between;padding:12px 18px 10px;border-bottom:1px solid rgba(255,255,255,.06);background:rgba(10,10,10,.6);}
+.cnavname{font-family:"Playfair Display",serif;font-size:22px;font-weight:700;color:var(--cream);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex:1;}
+.cnavnick{font-style:italic;font-size:16px;opacity:.55;margin-left:6px;}
+.cnavr{display:flex;align-items:center;gap:10px;flex-shrink:0;margin-left:10px;}
+.cpanels{display:flex;gap:6px;}
+.cpanel{width:8px;height:8px;border-radius:50%;background:rgba(201,168,76,.2);transition:background .3s;cursor:pointer;}
+.cpanel.on{background:var(--gold);}
+.cnext{font-family:"Courier Prime",monospace;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--gold);opacity:.5;white-space:nowrap;}
+
+/* PANEL 1 — LISTING VIEW */
+.p1face{background:var(--char);border:1px solid rgba(201,168,76,.12);border-top:3px solid var(--tc,var(--gold));}
+.tbg{position:absolute;top:52px;right:14px;z-index:20;font-family:"Courier Prime",monospace;font-size:9px;letter-spacing:2px;text-transform:uppercase;padding:3px 9px;border:1px solid var(--tc,var(--gold));color:var(--tc,var(--gold));background:rgba(10,10,10,.85);}
+
+/* GALLERY */
+.gal{flex-shrink:0;height:240px;position:relative;overflow:hidden;background:#080808;}
+.gal img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity .8s;}
+.gal img.gshow{opacity:1;}
+.gal .gsvg{position:absolute;inset:0;width:100%;height:100%;}
+.gal .gag{position:absolute;inset:0;background:linear-gradient(to bottom,transparent 40%,rgba(0,0,0,.8) 100%);}
+.rb{position:absolute;bottom:12px;left:16px;z-index:5;font-family:"Courier Prime",monospace;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--tc,var(--gold));border-left:2px solid var(--tc,var(--gold));padding-left:6px;background:rgba(10,10,10,.6);}
+.galnav{position:absolute;bottom:12px;right:14px;z-index:5;display:flex;gap:5px;}
+.galdot{width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,.25);cursor:pointer;transition:background .2s;}
+.galdot.on{background:var(--gold);}
+.pbtn{display:none;position:absolute;top:12px;right:14px;z-index:10;font-family:"Courier Prime",monospace;font-size:9px;letter-spacing:2px;text-transform:uppercase;padding:5px 11px;background:rgba(10,10,10,.9);border:1px solid var(--gold);color:var(--gold);cursor:pointer;}
+.pbtn:hover{background:var(--gold);color:var(--black);}
+body.admin .pbtn{display:block;}
+.gal.draghov{outline:3px dashed var(--gold);outline-offset:-4px;}
+
+/* LISTING DETAILS */
+.ldet{flex:1;padding:14px 18px;display:flex;flex-direction:column;gap:8px;overflow:hidden;}
+.ladr{font-style:italic;font-size:15px;color:var(--silver);}
+.vits{display:flex;gap:0;border:1px solid rgba(255,255,255,.06);border-radius:4px;overflow:hidden;flex-shrink:0;}
+.vit{flex:1;padding:10px 8px;border-right:1px solid rgba(255,255,255,.06);text-align:center;}
+.vit:last-child{border-right:none;}
+.vitl{font-family:"Courier Prime",monospace;font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:var(--silver);opacity:.7;margin-bottom:3px;}
+.vitv{font-family:"Playfair Display",serif;font-size:20px;font-weight:700;color:var(--tc,var(--gold));}
+.ltype{font-family:"Courier Prime",monospace;font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--silver);opacity:.6;}
+.lnote{font-style:italic;font-size:15px;color:var(--cream2);opacity:.75;line-height:1.5;border-left:2px solid rgba(201,168,76,.2);padding-left:10px;}
+
+/* PANEL 2 — VALUE VIEW */
+.p2face{background:var(--char);border:1px solid rgba(74,139,155,.2);border-top:3px solid var(--blue);}
+.vrows{flex:1;padding:12px 18px;display:flex;flex-direction:column;gap:5px;overflow:hidden;}
+.vr{display:flex;justify-content:space-between;align-items:center;padding:8px 12px;border-radius:3px;}
+.vr.purchase{background:rgba(201,168,76,.07);border-left:3px solid var(--gold);}
+.vr.debt{background:rgba(224,112,112,.07);border-left:3px solid var(--red);}
+.vr.equity{background:rgba(74,139,155,.07);border-left:3px solid var(--blue);}
+.vr.apr{background:rgba(46,204,113,.07);border-left:3px solid var(--green);}
+.vr.neutral{background:rgba(255,255,255,.03);border-left:3px solid rgba(255,255,255,.1);}
+.vrl{font-family:"Courier Prime",monospace;font-size:11px;letter-spacing:1px;text-transform:uppercase;color:var(--silver);}
+.vrv{font-family:"Playfair Display",serif;font-size:22px;font-weight:700;}
+.vrv.gld{color:var(--gold);}
+.vrv.red{color:var(--red);}
+.vrv.blu{color:var(--blue);}
+.vrv.grn{color:var(--green);}
+.vrv.wht{color:var(--cream);}
+.vrp{font-family:"Courier Prime",monospace;font-size:10px;color:var(--silver);opacity:.6;margin-left:4px;}
+.eqbar{margin:4px 18px 8px;}
+.eqtrack{height:8px;background:rgba(255,255,255,.05);border-radius:4px;overflow:hidden;}
+.eqfill{height:100%;background:linear-gradient(to right,var(--red),var(--gold),var(--green));border-radius:4px;transition:width .5s;}
+.eqls{display:flex;justify-content:space-between;margin-top:4px;}
+.eql{font-family:"Courier Prime",monospace;font-size:9px;letter-spacing:1px;text-transform:uppercase;color:var(--silver);opacity:.6;}
+.vdscr{margin:0 18px 8px;padding:10px 14px;background:rgba(201,168,76,.06);border:1px solid rgba(201,168,76,.15);border-radius:3px;display:flex;justify-content:space-between;align-items:center;}
+.vdscrl{font-family:"Courier Prime",monospace;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--gold);opacity:.7;}
+.vdscrv{font-family:"Playfair Display",serif;font-size:24px;font-weight:700;}
+
+/* PANEL 3 — P&L VIEW */
+.p3face{background:var(--char);border:1px solid rgba(46,204,113,.15);border-top:3px solid var(--green);}
+.plrows{flex:1;padding:12px 18px;display:flex;flex-direction:column;gap:5px;overflow-y:auto;scrollbar-width:none;}
+.plrows::-webkit-scrollbar{display:none;}
+.plr{display:flex;justify-content:space-between;align-items:center;padding:8px 12px;border-radius:3px;}
+.plr.inc{background:rgba(46,204,113,.07);border-left:3px solid var(--green);}
+.plr.exp{background:rgba(224,112,112,.07);border-left:3px solid var(--red);}
+.plr.noi{background:rgba(201,168,76,.09);border-left:3px solid var(--gold);}
+.plr.proj{background:rgba(74,139,155,.07);border-left:3px solid var(--blue);}
+.plr.tier{background:rgba(46,204,113,.04);border-left:3px solid rgba(46,204,113,.2);}
+.pll{font-family:"Courier Prime",monospace;font-size:11px;letter-spacing:1px;text-transform:uppercase;color:var(--silver);}
+.plv{font-family:"Playfair Display",serif;font-size:22px;font-weight:700;}
+.plv.pos{color:var(--green);}.plv.neg{color:var(--red);}.plv.gld{color:var(--gold);}.plv.blu{color:var(--blue);}
+.plp{font-family:"Courier Prime",monospace;font-size:10px;color:var(--silver);opacity:.6;margin-left:4px;}
+
+/* TIER PICKER */
+.tierrow{display:flex;align-items:center;gap:8px;padding:6px 12px;background:rgba(46,204,113,.04);border-radius:3px;margin-bottom:2px;}
+.tierlbl{font-family:"Courier Prime",monospace;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--green);opacity:.7;}
+.htiers{display:flex;gap:4px;}
+.tbtn{background:none;border:1px solid transparent;cursor:pointer;padding:3px 4px;border-radius:3px;opacity:.25;transition:all .15s;display:flex;gap:1px;align-items:flex-end;}
+.tbtn:hover{opacity:.6;}.tbtn.act{opacity:1;border-color:rgba(46,204,113,.4);background:rgba(46,204,113,.07);}
+
+/* IMPROVEMENTS LOG */
+.impsec{padding:10px 18px 14px;border-top:1px solid rgba(201,168,76,.1);}
+.imphdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;}
+.imptitle{font-family:"Courier Prime",monospace;font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--gold);opacity:.6;}
+.impab{display:none;font-family:"Courier Prime",monospace;font-size:8px;letter-spacing:2px;text-transform:uppercase;padding:3px 10px;background:rgba(201,168,76,.1);border:1px solid rgba(201,168,76,.3);color:var(--gold);cursor:pointer;}
+.impab:hover{background:var(--gold);color:var(--black);}
+body.admin .impab{display:block;}
+.impl{display:flex;flex-direction:column;gap:3px;max-height:130px;overflow-y:auto;scrollbar-width:none;}
+.impl::-webkit-scrollbar{display:none;}
+.ii{display:flex;align-items:center;gap:6px;padding:5px 8px;border-radius:2px;}
+.ii.done{background:rgba(46,204,113,.06);border-left:2px solid rgba(46,204,113,.35);}
+.ii.fore{background:rgba(74,139,155,.06);border-left:2px solid rgba(74,139,155,.35);}
+.iid{font-family:"Courier Prime",monospace;font-size:9px;color:var(--silver);opacity:.6;flex-shrink:0;min-width:38px;}
+.iis{font-family:"Cormorant Garamond",serif;font-size:16px;color:var(--cream2);flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.iia{font-family:"Playfair Display",serif;font-size:16px;font-weight:700;flex-shrink:0;}
+.ii.done .iia{color:var(--red);}.ii.fore .iia{color:var(--blue);}
+.iidel{display:none;background:none;border:none;color:var(--red);opacity:.4;cursor:pointer;font-size:14px;padding:0 3px;flex-shrink:0;}
+.iidel:hover{opacity:1;}
+body.admin .iidel{display:block;}
+.impmt{font-family:"Courier Prime",monospace;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--silver);opacity:.3;padding:4px 8px;}
+.impaf{display:none;margin-top:6px;padding:7px 8px;background:rgba(201,168,76,.05);border:1px solid rgba(201,168,76,.15);border-radius:3px;gap:5px;flex-wrap:wrap;}
+body.admin .impaf.op{display:flex;}
+.impaf input,.impaf select{background:var(--char);border:1px solid rgba(201,168,76,.2);color:var(--cream);font-family:"Courier Prime",monospace;font-size:10px;padding:4px 6px;outline:none;border-radius:2px;}
+.impaf input:focus,.impaf select:focus{border-color:var(--gold);}
+.iad{width:58px;}.ias{flex:1;min-width:90px;}.iaa{width:72px;}.iat{width:80px;}
+.impaf button{font-family:"Courier Prime",monospace;font-size:9px;letter-spacing:1px;text-transform:uppercase;padding:4px 10px;border:none;cursor:pointer;border-radius:2px;}
+.iasv{background:var(--gold);color:var(--black);}.iacn{background:rgba(255,255,255,.06);color:var(--silver);}
+
+footer{border-top:1px solid rgba(201,168,76,.1);padding:14px 28px;margin-top:8px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;}
+.flogo{font-family:"Playfair Display",serif;font-size:13px;font-weight:700;color:var(--gold);opacity:.4;}
+.fcopy{font-family:"Courier Prime",monospace;font-size:8px;letter-spacing:2px;text-transform:uppercase;color:var(--silver);opacity:.3;}
+
+/* RESPONSIVE */
+@media(min-width:1000px){:root{--cw:580px;--ch:800px;}}
+@media(min-width:1400px){:root{--cw:600px;--ch:820px;}}
+@media(max-width:650px){:root{--cw:calc(100vw - 40px);--ch:760px;}.tr{padding:14px 20px;}}
+
+/* COMPACT MODE */
+body.compact{--cw:380px;--ch:640px;}
+body.compact .gal{height:160px;}
+body.compact .cnav{padding:8px 14px;}
+body.compact .cnavname{font-size:16px;}
+body.compact .vitv{font-size:15px;}
+body.compact .vrv{font-size:16px;}
+body.compact .plv{font-size:16px;}
+body.compact .vrl{font-size:9px;}
+body.compact .pll{font-size:9px;}
+</style>
+</head>
+<body>
+
+<div id="ls">
+  <div class="lb">
+    <div class="ll">AH</div>
+    <div class="ln">ANAND Holdings, LLC</div>
+    <div class="ls2">Portfolio Access</div>
+    <input type="password" id="pi" placeholder="access code" autocomplete="off" onkeydown="if(event.key==='Enter')doAuth()">
+    <button onclick="doAuth()">Enter Portfolio</button>
+    <div id="aerr" class="lerr"></div>
+  </div>
+</div>
+
+<div id="site" style="display:none">
+  <div id="ab">
+    <span class="abm">Admin Mode &middot; Click Photo to upload &middot; Drag images onto cards</span>
+    <button class="lo" onclick="doLogout()">Log Out</button>
+  </div>
+  <header>
+    <div class="btag">Portfolio Deck &middot; Established 2015</div>
+    <h1>ANAND Holdings, LLC</h1>
+    <div class="hs">Bellaire, Michigan &middot; Intermediate River &middot; Seneca Corridor</div>
+  </header>
+  <div class="tabs">
+    <button class="tab act" onclick="doFilt('all',this)">All</button>
+    <button class="tab" onclick="doFilt('active',this)">Active Income</button>
+    <button class="tab" onclick="doFilt('bellaire',this)">Bellaire</button>
+    <button class="tab" onclick="doFilt('residence',this)">Residence</button>
+    <button class="tab" onclick="doFilt('future',this)">Future Builds</button>
+    <button class="tab" onclick="doFilt('intl',this)">International</button>
+  </div>
+  <div class="sw" id="sw">
+    <button class="st2" onclick="toggleSumm()">
+      <span>Portfolio Overview</span><span class="sa">&#9660;</span>
+    </button>
+    <div class="sb">
+      <div class="sg">
+        <div class="si"><div class="sil">Properties</div><div class="siv">12</div><div class="sis">Active + Future</div></div>
+        <div class="si"><div class="sil">Portfolio Value</div><div class="siv">$1.8M+</div><div class="sis">Est. current</div></div>
+        <div class="si"><div class="sil">LTR NOI</div><div class="siv">$22.9K</div><div class="sis">Annual &middot; 3 rentals</div></div>
+        <div class="si"><div class="sil">The Tara STR</div><div class="siv">$32.3K</div><div class="sis">Est. gross 2024</div></div>
+        <div class="si"><div class="sil">Full Build NOI</div><div class="siv">$250K+</div><div class="sis">Seneca corridor</div></div>
+        <div class="si"><div class="sil">GR Equity</div><div class="siv">$340K+</div><div class="sis">Bellaire leverage</div></div>
+        <div class="si"><div class="sil">Raise Open</div><div class="siv">$25K</div><div class="sis">320 Park</div></div>
+        <div class="si"><div class="sil">ADU Priority</div><div class="siv">Court</div><div class="sis">Next STR project</div></div>
+        <div class="si"><div class="sil">International</div><div class="siv">3</div><div class="sis">Belize + Nicaragua</div></div>
+      </div>
+      <div class="tl">
+        <div class="tlt">Value Tier System</div>
+        <div class="tli">
+          <div class="tlic"><div class="tlisw" style="background:#CD7F32"></div><div class="tlil">Bronze</div></div>
+          <div class="tlic"><div class="tlisw" style="background:#C0C0C0"></div><div class="tlil">Silver</div></div>
+          <div class="tlic"><div class="tlisw" style="background:#C9A84C"></div><div class="tlil">Gold</div></div>
+          <div class="tlic"><div class="tlisw" style="background:#E5E4E2"></div><div class="tlil">Platinum</div></div>
+          <div class="tlic"><div class="tlisw" style="background:#777"></div><div class="tlil">Black</div></div>
+          <div class="tlic"><div class="tlisw" style="background:#9B6FD4"></div><div class="tlil">Obsidian</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="sizetog">
+    <button class="stbtn act" data-mode="large" onclick="setSize(this)">Large Cards</button>
+    <button class="stbtn" data-mode="compact" onclick="setSize(this)">Compact</button>
+  </div>
+  <div class="trw">
+    <button class="arr arl" onclick="scrollCards(-1)">&#8249;</button>
+    <div class="tr" id="track"></div>
+    <button class="arr arr2" onclick="scrollCards(1)">&#8250;</button>
+  </div>
+  <footer>
+    <span class="flogo">ANAND Holdings, LLC</span>
+    <span class="fcopy">Private &amp; Confidential &middot; Not for Distribution</span>
+  </footer>
+</div>
+
+<script>
+var ADMIN = false;
+var APWD = 'bellaire2025';
+var IPWD = 'tarariver';
+
+function doAuth() {
+  var v = document.getElementById('pi').value.trim().toLowerCase();
+  if (v === APWD) { ADMIN = true; doGo('admin'); }
+  else if (v === IPWD) { ADMIN = false; doGo('investor'); }
+  else { document.getElementById('aerr').textContent = 'Incorrect code'; document.getElementById('pi').value = ''; }
+}
+function doGo(role) {
+  sessionStorage.setItem('role', role);
+  document.getElementById('ls').style.display = 'none';
+  document.getElementById('site').style.display = 'block';
+  if (role === 'admin') { document.body.classList.add('admin'); document.getElementById('ab').classList.add('on'); }
+  buildAll();
+  setupEvents();
+  loadPhotos();
+}
+function doLogout() { sessionStorage.removeItem('role'); location.reload(); }
+function toggleSumm() { document.getElementById('sw').classList.toggle('op'); }
+function setSize(btn) {
+  document.querySelectorAll('.stbtn').forEach(function(b) { b.classList.remove('act'); });
+  btn.classList.add('act');
+  if (btn.dataset.mode === 'compact') document.body.classList.add('compact');
+  else document.body.classList.remove('compact');
+}
+
+function getTier(v) {
+  if (!v || v <= 0) return 'tbd';
+  if (v < 150000) return 'bronze';
+  if (v < 300000) return 'silver';
+  if (v < 500000) return 'gold';
+  if (v < 750000) return 'platinum';
+  if (v < 1000000) return 'black';
+  return 'obsidian';
+}
+var TLABELS = { bronze:'Bronze', silver:'Silver', gold:'Gold', platinum:'Platinum', black:'Black', obsidian:'Obsidian', tbd:'TBD' };
+
+function fm(n) {
+  var a = Math.abs(Math.round(n));
+  return (n < 0 ? '-' : '') + '$' + a.toLocaleString();
+}
+function hi(n) {
+  var s = '';
+  for (var i = 0; i < n; i++) s += '<svg width="13" height="13" viewBox="0 0 20 20"><polygon points="10,2 18,9 16,9 16,17 12,17 12,13 8,13 8,17 4,17 4,9 2,9" fill="#2ECC71"/></svg>';
+  return s;
+}
+function calcLTR(d, t) {
+  var r = (d.rent - 250) + (t * 250);
+  var ann = r * 12, pi = d.pi * 12, tx = (d.tax || 0) * 12, mg = ann * (d.mgmt || 0);
+  var noi = ann - pi - tx - mg;
+  return { r: r, ann: ann, pi: pi, tx: tx, mg: mg, noi: noi, pct: (noi / ann * 100).toFixed(1) };
+}
+function calcDSCR(p) {
+  var r = p.rev, e = p.exp, noi = 0;
+  if (r.t === 'ltr') { noi = calcLTR(r, 2).noi; }
+  else if (r.t === 'str') {
+    var inc = 0, ex = 0;
+    for (var i = 0; i < r.rows.length; i++) { if (r.rows[i].c === 'inc') inc += r.rows[i].v; else ex += r.rows[i].v; }
+    noi = inc + ex;
+  } else return null;
+  if (!e.pi || e.pi <= 0) return null;
+  return (noi / e.pi).toFixed(2);
+}
+
+function loadImp(pid) { try { var d = localStorage.getItem('trh_imp_' + pid); return d ? JSON.parse(d) : []; } catch(e) { return []; } }
+function saveImpData(pid, items) { try { localStorage.setItem('trh_imp_' + pid, JSON.stringify(items)); } catch(e) {} }
+
+function buildNav(p, panel) {
+  var labels = ['Listing', 'Value', 'P&L'];
+  var next = labels[(panel + 1) % 3];
+  var nick = p.nick ? (' <span class="cnavnick">' + p.nick + '</span>') : '';
+  var dots = '';
+  for (var i = 0; i < 3; i++) {
+    dots += '<div class="cpanel' + (i === panel ? ' on' : '') + '" data-goto="' + i + '" data-pid="' + p.id + '"></div>';
+  }
+  return '<div class="cnav">'
+    + '<div class="cnavname">' + p.name + nick + '</div>'
+    + '<div class="cnavr">'
+    + '<div class="cpanels">' + dots + '</div>'
+    + '<div class="cnext">' + next + ' &rarr;</div>'
+    + '</div></div>';
+}
+
+function buildP1(p) {
+  var bs = p.beds > 0 ? p.beds + 'BD' : '--';
+  var bts = p.baths > 0 ? p.baths + 'BA' : '--';
+  var sf = p.sqft > 0 ? p.sqft.toLocaleString() + 'sf' : '--';
+  var vs = p.ev > 0 ? '$' + (p.ev / 1000).toFixed(0) + 'K' : 'TBD';
+  var tier = getTier(p.ev);
+  var galDots = '<div class="galdot on" data-gi="0" data-pid="' + p.id + '"></div>';
+  for (var i = 1; i < 5; i++) galDots += '<div class="galdot" data-gi="' + i + '" data-pid="' + p.id + '"></div>';
+  return '<div class="face f1 p1face" data-tier="' + tier + '">'
+    + buildNav(p, 0)
+    + '<div class="tbg">' + TLABELS[tier] + ' &middot; ' + vs + '</div>'
+    + '<div class="gal" id="gal-' + p.id + '" data-pid="' + p.id + '" data-ci="0">'
+    + p.svg
+    + '<div class="gag"></div>'
+    + '<div class="rb">' + p.rl + '</div>'
+    + '<div class="galnav">' + galDots + '</div>'
+    + '<button class="pbtn" data-pid="' + p.id + '">&#128247; Photos</button>'
+    + '<input type="file" id="fi-' + p.id + '" accept="image/*" multiple style="display:none">'
+    + '</div>'
+    + '<div class="ldet">'
+    + '<div class="ladr">' + p.addr + '</div>'
+    + '<div class="vits">'
+    + '<div class="vit"><div class="vitl">Beds</div><div class="vitv">' + bs + '</div></div>'
+    + '<div class="vit"><div class="vitl">Baths</div><div class="vitv">' + bts + '</div></div>'
+    + '<div class="vit"><div class="vitl">Sq Ft</div><div class="vitv">' + sf + '</div></div>'
+    + '<div class="vit"><div class="vitl">Est. Value</div><div class="vitv">' + vs + '</div></div>'
+    + '</div>'
+    + '<div class="ltype">' + p.type + '</div>'
+    + (p.lnote ? '<div class="lnote">' + p.lnote + '</div>' : '')
+    + '</div></div>';
+}
+
+function buildP2(p) {
+  var e = p.exp;
+  var equity = p.ev > 0 ? p.ev - e.lb : 0;
+  var eqPct = p.ev > 0 ? Math.round((equity / p.ev) * 100) : 0;
+  var ltv = p.ev > 0 ? Math.round((e.lb / p.ev) * 100) : 0;
+  var delta = (p.ev > 0 && e.pp > 0) ? p.ev - e.pp : 0;
+  var deltaPct = e.pp > 0 ? ((delta / e.pp) * 100).toFixed(0) : 0;
+  var barW = Math.min(100, Math.max(0, eqPct));
+  var dscr = calcDSCR(p);
+  var rows = '';
+  rows += '<div class="vr neutral"><span class="vrl">Current Value</span><span class="vrv wht">' + (p.ev > 0 ? fm(p.ev) : 'TBD') + '</span></div>';
+  rows += '<div class="vr purchase"><span class="vrl">Purchase Price</span><span class="vrv gld">' + (e.pp > 0 ? fm(e.pp) : '--') + '</span></div>';
+  if (equity > 0) rows += '<div class="vr equity"><span class="vrl">Est. Equity</span><span class="vrv blu">' + fm(equity) + '<span class="vrp">' + eqPct + '%</span></span></div>';
+  rows += '<div class="vr debt"><span class="vrl">Mortgage Balance</span><span class="vrv red">' + (e.lb > 0 ? fm(e.lb) : (e.pp > 0 ? 'Paid Off' : '--')) + '</span></div>';
+  if (delta > 0) rows += '<div class="vr apr"><span class="vrl">Value Delta</span><span class="vrv grn">+' + fm(delta) + '<span class="vrp">+' + deltaPct + '%</span></span></div>';
+  if (e.rate && e.rate !== '--') rows += '<div class="vr neutral"><span class="vrl">Rate &middot; Term</span><span class="vrv wht">' + e.rate + '</span></div>';
+  if (e.balloon && e.balloon !== '--') rows += '<div class="vr neutral"><span class="vrl">Balloon</span><span class="vrv wht">' + e.balloon + '</span></div>';
+  var eqBarHtml = p.ev > 0 ? '<div class="eqbar"><div class="eqtrack"><div class="eqfill" style="width:' + barW + '%"></div></div><div class="eqls"><span class="eql">Debt ' + ltv + '%</span><span class="eql">Equity ' + eqPct + '%</span></div></div>' : '';
+  var dscrHtml = '';
+  if (dscr) {
+    var dv = parseFloat(dscr);
+    var dc = dv >= 1.25 ? 'grn' : dv >= 1 ? 'gld' : 'red';
+    dscrHtml = '<div class="vdscr"><span class="vdscrl">DSCR &middot; 1.25+ lender ready</span><span class="vdscrv ' + dc + '">' + dscr + 'x</span></div>';
+  }
+  return '<div class="face f2 p2face">'
+    + buildNav(p, 1)
+    + '<div class="vrows">' + rows + '</div>'
+    + eqBarHtml
+    + dscrHtml
+    + '</div>';
+}
+
+function buildImpLog(pid) {
+  var items = loadImp(pid);
+  var rows = '';
+  if (items.length) {
+    for (var i = 0; i < items.length; i++) {
+      var it = items[i];
+      rows += '<div class="ii ' + it.type + '">'
+        + '<span class="iid">' + (it.date || '--') + '</span>'
+        + '<span class="iis">' + (it.desc || '--') + '</span>'
+        + '<span class="iia">' + (it.amt ? fm(-Math.abs(it.amt)) + (it.type === 'fore' ? ' est.' : '') : '--') + '</span>'
+        + '<button class="iidel" data-pid="' + pid + '" data-idx="' + i + '">x</button>'
+        + '</div>';
+    }
+  } else {
+    rows = '<div class="impmt">No entries yet</div>';
+  }
+  return '<div class="impsec">'
+    + '<div class="imphdr"><span class="imptitle">Improvements + Forecast</span>'
+    + '<button class="impab" data-action="impadd" data-pid="' + pid + '">+ Add</button></div>'
+    + '<div class="impl" id="impl-' + pid + '">' + rows + '</div>'
+    + '<div class="impaf" id="impaf-' + pid + '">'
+    + '<input class="iad" placeholder="2025" maxlength="7">'
+    + '<input class="ias" placeholder="Description">'
+    + '<input class="iaa" placeholder="Amount" type="number">'
+    + '<select class="iat"><option value="done">Done</option><option value="fore">Forecast</option></select>'
+    + '<button class="iasv" data-action="impsave" data-pid="' + pid + '">Save</button>'
+    + '<button class="iacn" data-action="impclose" data-pid="' + pid + '">Cancel</button>'
+    + '</div></div>';
+}
+
+function buildP3(p) {
+  var r = p.rev;
+  var rows = '';
+  if (r.t === 'ltr') {
+    var c = calcLTR(r, 2);
+    rows += '<div class="tierrow"><span class="tierlbl">Rent Tier</span><div class="htiers">'
+      + '<button class="tbtn" data-action="settier" data-pid="' + p.id + '" data-tier="1">' + hi(1) + '</button>'
+      + '<button class="tbtn act" data-action="settier" data-pid="' + p.id + '" data-tier="2">' + hi(2) + '</button>'
+      + '<button class="tbtn" data-action="settier" data-pid="' + p.id + '" data-tier="3">' + hi(3) + '</button>'
+      + '<button class="tbtn" data-action="settier" data-pid="' + p.id + '" data-tier="4">' + hi(4) + '</button>'
+      + '</div></div>';
+    rows += '<div id="pldata-' + p.id + '">' + buildLTRRows(p, 2) + '</div>';
+  } else {
+    var inc = 0, ex = 0;
+    for (var i = 0; i < r.rows.length; i++) {
+      var rw = r.rows[i];
+      var rc = rw.c === 'inc' ? 'inc' : rw.c === 'exp' ? 'exp' : 'noi';
+      var vc = rw.v > 0 ? 'pos' : rw.v < 0 ? 'neg' : 'gld';
+      rows += '<div class="plr ' + rc + '"><span class="pll">' + rw.l + '</span><span class="plv ' + vc + '">' + (rw.v ? fm(rw.v) : '--') + '</span></div>';
+      if (rw.c === 'inc') inc += rw.v; else if (rw.c === 'exp') ex += rw.v;
+    }
+    var noi = inc + ex;
+    if (inc > 0 && ex < 0) rows += '<div class="plr noi"><span class="pll">Annual NOI</span><span class="plv gld">' + fm(noi) + '<span class="plp">' + (noi / inc * 100).toFixed(1) + '%</span></span></div>';
+    if (r.proj) rows += '<div class="plr proj"><span class="pll" style="font-size:10px">' + r.proj + '</span></div>';
+  }
+  return '<div class="face f3 p3face">'
+    + buildNav(p, 2)
+    + '<div class="plrows">' + rows + '</div>'
+    + buildImpLog(p.id)
+    + '</div>';
+}
+
+function buildLTRRows(p, t) {
+  var c = calcLTR(p.rev, t);
+  return '<div class="plr inc"><span class="pll">Monthly Rent</span><span class="plv pos">$' + c.r.toLocaleString() + '<span class="plp">/mo</span></span></div>'
+    + '<div class="plr inc"><span class="pll">Annual Gross</span><span class="plv pos">' + fm(c.ann) + '</span></div>'
+    + '<div class="plr exp"><span class="pll">Mortgage P+I</span><span class="plv neg">' + fm(-c.pi) + '</span></div>'
+    + '<div class="plr exp"><span class="pll">Tax + Insurance</span><span class="plv neg">' + fm(-c.tx) + '</span></div>'
+    + '<div class="plr exp"><span class="pll">Management</span><span class="plv neg">' + fm(-c.mg) + '</span></div>'
+    + '<div class="plr noi"><span class="pll">Annual NOI</span><span class="plv gld">' + fm(c.noi) + '<span class="plp">' + c.pct + '%</span></span></div>'
+    + '<div class="plr proj"><span class="pll">Tier 4 Potential</span><span class="plv blu">' + fm(calcLTR(p.rev, 4).noi) + '</span></div>';
+}
+
+function buildCard(p) {
+  var tier = getTier(p.ev);
+  return '<div class="cs" id="sc-' + p.id + '" data-id="' + p.id + '" data-tags="' + p.tags + '" data-panel="0">'
+    + '<div class="cw2"><div class="card" id="cd-' + p.id + '" data-tier="' + tier + '">'
+    + buildP1(p)
+    + buildP2(p)
+    + buildP3(p)
+    + '</div></div></div>';
+}
+
+function buildAll() {
+  var t = document.getElementById('track');
+  var html = '';
+  for (var i = 0; i < PROPS.length; i++) html += buildCard(PROPS[i]);
+  t.innerHTML = html;
+}
+
+function tapCard(id) {
+  var sc = document.getElementById('sc-' + id);
+  var cur = parseInt(sc.dataset.panel || '0');
+  var nxt = (cur + 1) % 3;
+  gotoPanel(sc, nxt);
+}
+
+function gotoPanel(sc, nxt) {
+  sc.dataset.panel = nxt;
+  sc.classList.remove('p1', 'p2');
+  if (nxt === 1) sc.classList.add('p1');
+  else if (nxt === 2) sc.classList.add('p2');
+}
+
+function doFilt(tag, btn) {
+  document.querySelectorAll('.tab').forEach(function(t) { t.classList.remove('act'); });
+  btn.classList.add('act');
+  var cards = document.querySelectorAll('.cs');
+  var first = null;
+  for (var i = 0; i < cards.length; i++) {
+    var show = tag === 'all' || cards[i].dataset.tags.indexOf(tag) >= 0;
+    cards[i].style.display = show ? '' : 'none';
+    if (show && !first) first = cards[i];
+  }
+  if (first) { document.getElementById('track').scrollTo({ left: first.offsetLeft - 60, behavior: 'smooth' }); }
+}
+
+function scrollCards(dir) {
+  var track = document.getElementById('track');
+  var w = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--cw')) || 560;
+  track.scrollBy({ left: dir * (w + 28), behavior: 'smooth' });
+}
+
+function setTier(pid, t) {
+  var p = null;
+  for (var i = 0; i < PROPS.length; i++) { if (PROPS[i].id === pid) { p = PROPS[i]; break; } }
+  if (!p) return;
+  var sc = document.getElementById('sc-' + pid);
+  sc.querySelectorAll('[data-action="settier"]').forEach(function(b) { b.classList.toggle('act', parseInt(b.dataset.tier) === t); });
+  var el = document.getElementById('pldata-' + pid);
+  if (el) el.innerHTML = buildLTRRows(p, t);
+}
+
+function openImpAdd(pid) { var el = document.getElementById('impaf-' + pid); if (el) el.classList.add('op'); }
+function closeImpAdd(pid) {
+  var el = document.getElementById('impaf-' + pid);
+  if (!el) return;
+  el.classList.remove('op');
+  el.querySelectorAll('input').forEach(function(i) { i.value = ''; });
+}
+function saveImp(pid) {
+  var el = document.getElementById('impaf-' + pid);
+  if (!el) return;
+  var date = el.querySelector('.iad').value.trim() || '--';
+  var desc = el.querySelector('.ias').value.trim();
+  var amt = parseFloat(el.querySelector('.iaa').value) || 0;
+  var type = el.querySelector('.iat').value;
+  if (!desc) return;
+  var items = loadImp(pid);
+  items.unshift({ date: date, desc: desc, amt: amt, type: type });
+  saveImpData(pid, items);
+  closeImpAdd(pid);
+  refreshP3(pid);
+}
+function delImp(pid, idx) {
+  var items = loadImp(pid);
+  items.splice(idx, 1);
+  saveImpData(pid, items);
+  refreshP3(pid);
+}
+function refreshP3(pid) {
+  var p = null;
+  for (var i = 0; i < PROPS.length; i++) { if (PROPS[i].id === pid) { p = PROPS[i]; break; } }
+  if (!p) return;
+  var face = document.querySelector('#sc-' + pid + ' .p3face');
+  if (face) face.innerHTML = buildP3(p).replace('<div class="face f3 p3face">', '').replace(/<\/div>$/, '');
+}
+
+function savePhotos(pid, files) {
+  var stored = loadPhotoData(pid);
+  var remaining = 5 - stored.length;
+  var toAdd = Math.min(files.length, remaining);
+  var count = 0;
+  function next() {
+    if (count >= toAdd) { savePhotoData(pid, stored); refreshGallery(pid); return; }
+    var f = files[count++];
+    var rd = new FileReader();
+    rd.onload = function(ev) {
+      var img = new Image();
+      img.onload = function() {
+        var MAX = 1200;
+        var scale = Math.min(1, MAX / Math.max(img.width, img.height));
+        var w = Math.round(img.width * scale);
+        var cv = document.createElement('canvas');
+        cv.width = w;
+        cv.height = Math.round(img.height * scale);
+        cv.getContext('2d').drawImage(img, 0, 0, cv.width, cv.height);
+        var compressed = cv.toDataURL('image/jpeg', 0.72);
+        stored.push(compressed);
+        next();
+      };
+      img.src = ev.target.result;
+    };
+    rd.readAsDataURL(f);
+  }
+  next();
+}
+function loadPhotoData(pid) { try { var d = localStorage.getItem('trh_ph_' + pid); return d ? JSON.parse(d) : []; } catch(e) { return []; } }
+function savePhotoData(pid, arr) { try { localStorage.setItem('trh_ph_' + pid, JSON.stringify(arr)); } catch(e) {} }
+function refreshGallery(pid) {
+  var gal = document.getElementById('gal-' + pid);
+  if (!gal) return;
+  var imgs = gal.querySelectorAll('img.gph');
+  imgs.forEach(function(im) { im.remove(); });
+  var photos = loadPhotoData(pid);
+  for (var i = 0; i < photos.length; i++) {
+    var img = document.createElement('img');
+    img.className = 'gph' + (i === 0 ? ' gshow' : '');
+    img.src = photos[i];
+    img.alt = '';
+    gal.insertBefore(img, gal.querySelector('.gag'));
+  }
+  if (photos.length > 0) { gal.querySelector('.gsvg') && (gal.querySelector('.gsvg').style.display = 'none'); }
+  var dots = gal.querySelectorAll('.galdot');
+  dots.forEach(function(d, i) { d.classList.toggle('on', i === 0); d.style.display = i < photos.length ? '' : (photos.length === 0 && i === 0 ? '' : 'none'); });
+  gal.dataset.ci = '0';
+}
+function showGalImg(pid, idx) {
+  var gal = document.getElementById('gal-' + pid);
+  if (!gal) return;
+  var imgs = gal.querySelectorAll('img.gph');
+  imgs.forEach(function(im, i) { im.classList.toggle('gshow', i === idx); });
+  gal.querySelectorAll('.galdot').forEach(function(d, i) { d.classList.toggle('on', i === idx); });
+  gal.dataset.ci = idx;
+}
+function loadPhotos() {
+  for (var i = 0; i < PROPS.length; i++) {
+    var pid = PROPS[i].id;
+    var photos = loadPhotoData(pid);
+    if (photos.length > 0) refreshGallery(pid);
+  }
+}
+
+function setupEvents() {
+  document.addEventListener('dragover', function(e) { e.preventDefault(); });
+  document.addEventListener('drop', function(e) { e.preventDefault(); });
+  var track = document.getElementById('track');
+
+  track.addEventListener('click', function(e) {
+    var btn = e.target.closest('[data-action]');
+    if (btn) {
+      e.stopPropagation();
+      var action = btn.dataset.action;
+      var pid = btn.dataset.pid;
+      var tier = parseInt(btn.dataset.tier || '0');
+      if (action === 'settier') setTier(pid, tier);
+      else if (action === 'impadd') openImpAdd(pid);
+      else if (action === 'impsave') saveImp(pid);
+      else if (action === 'impclose') closeImpAdd(pid);
+      else if (action === 'imdel') delImp(pid, parseInt(btn.dataset.idx || '0'));
+      return;
+    }
+    var dotP = e.target.closest('.cpanel');
+    if (dotP) {
+      e.stopPropagation();
+      var sc = dotP.closest('.cs');
+      if (sc) gotoPanel(sc, parseInt(dotP.dataset.goto));
+      return;
+    }
+    var delBtn = e.target.closest('.iidel');
+    if (delBtn) {
+      e.stopPropagation();
+      delImp(delBtn.dataset.pid, parseInt(delBtn.dataset.idx || '0'));
+      return;
+    }
+    var pbtn = e.target.closest('.pbtn');
+    if (pbtn) {
+      e.stopPropagation();
+      document.getElementById('fi-' + pbtn.dataset.pid).click();
+      return;
+    }
+    var galdot = e.target.closest('.galdot');
+    if (galdot) {
+      e.stopPropagation();
+      showGalImg(galdot.dataset.pid, parseInt(galdot.dataset.gi));
+      return;
+    }
+    var sc2 = e.target.closest('.cs');
+    if (sc2) tapCard(sc2.dataset.id);
+  });
+
+  track.addEventListener('change', function(e) {
+    if (e.target.type === 'file' && e.target.multiple !== false) {
+      var pid = e.target.id.replace('fi-', '');
+      if (e.target.files.length > 0) savePhotos(pid, e.target.files);
+    }
+  });
+
+  track.addEventListener('dragover', function(e) {
+    e.preventDefault();
+    var gal = e.target.closest('.gal');
+    if (gal) gal.classList.add('draghov');
+  });
+  track.addEventListener('dragleave', function(e) {
+    var gal = e.target.closest('.gal');
+    if (gal) gal.classList.remove('draghov');
+  });
+  track.addEventListener('drop', function(e) {
+    e.preventDefault();
+    var gal = e.target.closest('.gal');
+    if (!gal) return;
+    gal.classList.remove('draghov');
+    var files = e.dataTransfer.files;
+    if (!files.length) return;
+    var pid = gal.dataset.pid;
+    savePhotos(pid, files);
+  });
+
+  // Hover scroll — edge cards drift toward center
+  track.addEventListener('mouseover', function(e) {
+    var cs = e.target.closest('.cs');
+    if (!cs || cs.style.display === 'none') return;
+    var tr = document.getElementById('track');
+    var trRect = tr.getBoundingClientRect();
+    var csRect = cs.getBoundingClientRect();
+    var cw = csRect.width;
+    var leftEdge = csRect.left - trRect.left;
+    var rightEdge = trRect.right - csRect.right;
+    if (leftEdge < cw * 0.25) {
+      tr.scrollBy({ left: -(cw * 0.6), behavior: 'smooth' });
+    } else if (rightEdge < cw * 0.25) {
+      tr.scrollBy({ left: cw * 0.6, behavior: 'smooth' });
+    }
+  });
+}
+
+var SVG = {
+  river: '<svg class="gsvg" viewBox="0 0 560 240" xmlns="http://www.w3.org/2000/svg"><rect width="560" height="240" fill="#0a1a2e"/><circle cx="80" cy="22" r="1.5" fill="#E8C97A" opacity=".8"/><circle cx="200" cy="12" r="1.2" fill="white" opacity=".5"/><circle cx="340" cy="30" r="1.5" fill="#E8C97A" opacity=".6"/><circle cx="480" cy="10" r="1.2" fill="white" opacity=".4"/><path d="M0 120 Q140 85 280 105 Q420 125 560 88 L560 240 L0 240Z" fill="#1a3a2a"/><path d="M0 148 Q116 118 232 136 Q348 154 464 118 Q520 100 560 112 L560 240 L0 240Z" fill="#2a5a3a"/><rect x="0" y="178" width="560" height="62" fill="#0d2a3a" opacity=".9"/><path d="M30 185 Q140 180 280 185 Q420 190 530 183" stroke="#C9A84C" stroke-width="1" fill="none" opacity=".3"/><rect x="215" y="158" width="130" height="4" fill="#050505" opacity=".9"/><rect x="230" y="146" width="4" height="18" fill="#050505" opacity=".9"/><rect x="334" y="150" width="4" height="14" fill="#050505" opacity=".9"/><rect x="182" y="92" width="126" height="62" fill="#0d1a0d" opacity=".9"/><polygon points="175,92 316,92 248,58" fill="#0d0d10" opacity=".95"/><rect x="196" y="104" width="28" height="20" fill="#C9A84C" opacity=".28" rx="1"/><rect x="254" y="104" width="28" height="20" fill="#C9A84C" opacity=".28" rx="1"/><text x="280" y="50" text-anchor="middle" font-family="serif" font-size="16" fill="#C9A84C" opacity=".9" font-style="italic">The Tara</text></svg>',
+  gr: '<svg class="gsvg" viewBox="0 0 560 240" xmlns="http://www.w3.org/2000/svg"><rect width="560" height="240" fill="#1a180a"/><path d="M0 158 Q140 132 280 148 Q420 164 560 132 L560 240 L0 240Z" fill="#2a2410" opacity=".7"/><rect x="182" y="88" width="196" height="100" fill="#221e0a"/><polygon points="175,88 385,88 280,48" fill="#1a1805"/><rect x="196" y="102" width="36" height="26" fill="#C9A84C" opacity=".22" rx="1"/><rect x="334" y="102" width="36" height="26" fill="#C9A84C" opacity=".22" rx="1"/><rect x="262" y="108" width="36" height="52" fill="#0a0a05"/><ellipse cx="112" cy="132" rx="50" ry="62" fill="#1a2a0a" opacity=".8"/></svg>',
+  park: '<svg class="gsvg" viewBox="0 0 560 240" xmlns="http://www.w3.org/2000/svg"><rect width="560" height="240" fill="#180d0a"/><path d="M0 158 Q140 132 280 148 Q420 164 560 132 L560 240 L0 240Z" fill="#2a1a12" opacity=".7"/><rect x="175" y="84" width="210" height="100" fill="#221212"/><polygon points="168,84 392,84 280,48" fill="#1a0d0d"/><rect x="184" y="96" width="40" height="28" fill="#C9A84C" opacity=".2" rx="1"/><rect x="342" y="96" width="40" height="28" fill="#C9A84C" opacity=".2" rx="1"/><rect x="262" y="90" width="36" height="46" fill="#0a0505"/><line x1="280" y1="168" x2="280" y2="240" stroke="#C9A84C" stroke-width="1.5" opacity=".2" stroke-dasharray="5,5"/><text x="364" y="220" text-anchor="middle" font-family="monospace" font-size="9" fill="#C9A84C" opacity=".5">101 ANNE</text><text x="196" y="220" text-anchor="middle" font-family="monospace" font-size="9" fill="#C9A84C" opacity=".5">320 PARK</text></svg>',
+  court: '<svg class="gsvg" viewBox="0 0 560 240" xmlns="http://www.w3.org/2000/svg"><rect width="560" height="240" fill="#0a180a"/><path d="M0 178 Q140 148 280 166 Q420 184 560 148 L560 240 L0 240Z" fill="#1a3015" opacity=".7"/><rect x="148" y="92" width="168" height="108" fill="#1a2a1a"/><polygon points="140,92 324,92 232,54" fill="#141e14"/><rect x="160" y="108" width="34" height="24" fill="#C9A84C" opacity=".2" rx="1"/><rect x="202" y="108" width="34" height="24" fill="#C9A84C" opacity=".2" rx="1"/><rect x="248" y="108" width="34" height="24" fill="#C9A84C" opacity=".2" rx="1"/><rect x="214" y="152" width="36" height="48" fill="#0a0a0a"/><rect x="346" y="126" width="112" height="72" fill="#152015"/><text x="402" y="178" text-anchor="middle" font-family="monospace" font-size="7" fill="#C9A84C" opacity=".55">ADU IN RENO</text></svg>',
+  adu: '<svg class="gsvg" viewBox="0 0 560 240" xmlns="http://www.w3.org/2000/svg"><rect width="560" height="240" fill="#0d1a0d"/><path d="M0 178 Q140 155 280 168 Q420 180 560 155 L560 240 L0 240Z" fill="#1a3015" opacity=".7"/><rect x="346" y="102" width="148" height="100" fill="#1a2a1a"/><polygon points="340,102 500,102 420,66" fill="#141e14"/><rect x="360" y="118" width="30" height="22" fill="#C9A84C" opacity=".3" rx="1"/><rect x="404" y="118" width="30" height="22" fill="#C9A84C" opacity=".3" rx="1"/><rect x="394" y="154" width="26" height="48" fill="#0a0a0a"/><rect x="80" y="88" width="220" height="114" fill="#152015" opacity=".6" stroke="#C9A84C" stroke-width="1" stroke-dasharray="6,3"/><text x="190" y="145" text-anchor="middle" font-family="monospace" font-size="10" fill="#C9A84C" opacity=".4">RENOVATION</text><text x="190" y="162" text-anchor="middle" font-family="monospace" font-size="10" fill="#2ECC71" opacity=".5">IN PROGRESS</text></svg>',
+  tower: '<svg class="gsvg" viewBox="0 0 560 240" xmlns="http://www.w3.org/2000/svg"><rect width="560" height="240" fill="#080812"/><circle cx="100" cy="24" r="1.5" fill="#E8C97A" opacity=".7"/><circle cx="334" cy="32" r="1.5" fill="#E8C97A" opacity=".6"/><path d="M0 200 Q65 168 106 182 L106 240 L0 240Z" fill="#0a1a0a"/><path d="M454 168 Q500 148 546 162 L546 240 L454 240Z" fill="#0a1a0a"/><rect x="202" y="136" width="156" height="88" fill="#1a1a2a"/><rect x="213" y="94" width="134" height="46" fill="#1a1a30"/><rect x="225" y="50" width="110" height="48" fill="#1a1a38"/><rect x="220" y="42" width="120" height="12" fill="#2a2a4a"/><rect x="218" y="144" width="28" height="18" fill="#C9A84C" opacity=".25" rx="1"/><rect x="300" y="144" width="28" height="18" fill="#C9A84C" opacity=".25" rx="1"/><rect x="226" y="102" width="22" height="16" fill="#C9A84C" opacity=".3" rx="1"/><rect x="298" y="102" width="22" height="16" fill="#C9A84C" opacity=".3" rx="1"/><rect x="238" y="58" width="18" height="14" fill="#C9A84C" opacity=".35" rx="1"/><rect x="290" y="58" width="18" height="14" fill="#C9A84C" opacity=".35" rx="1"/></svg>',
+  hills: '<svg class="gsvg" viewBox="0 0 560 240" xmlns="http://www.w3.org/2000/svg"><rect width="560" height="240" fill="#0d1a1a"/><path d="M0 200 Q65 166 128 180 Q190 195 252 158 Q314 122 376 148 Q438 175 560 158 L560 240 L0 240Z" fill="#1a3520" opacity=".8"/><rect x="121" y="116" width="318" height="8" fill="#2a4a3a"/><rect x="143" y="124" width="8" height="86" fill="#1a2a2a"/><rect x="431" y="124" width="8" height="86" fill="#1a2a2a"/><rect x="121" y="58" width="318" height="62" fill="#1a2820"/><rect x="148" y="68" width="80" height="56" fill="#C9A84C" opacity=".12" rx="1"/><rect x="338" y="68" width="80" height="56" fill="#C9A84C" opacity=".12" rx="1"/><line x1="121" y1="116" x2="439" y2="116" stroke="#C9A84C" stroke-width="1.5" opacity=".38"/></svg>',
+  lot: '<svg class="gsvg" viewBox="0 0 560 240" xmlns="http://www.w3.org/2000/svg"><rect width="560" height="240" fill="#0a0a12"/><line x1="0" y1="60" x2="560" y2="60" stroke="#C9A84C" stroke-width=".4" opacity=".1"/><line x1="0" y1="120" x2="560" y2="120" stroke="#C9A84C" stroke-width=".4" opacity=".1"/><line x1="0" y1="180" x2="560" y2="180" stroke="#C9A84C" stroke-width=".4" opacity=".1"/><line x1="140" y1="0" x2="140" y2="240" stroke="#C9A84C" stroke-width=".4" opacity=".1"/><line x1="280" y1="0" x2="280" y2="240" stroke="#C9A84C" stroke-width=".4" opacity=".1"/><line x1="420" y1="0" x2="420" y2="240" stroke="#C9A84C" stroke-width=".4" opacity=".1"/><rect x="140" y="60" width="280" height="180" stroke="#4A9B6F" stroke-width="2" fill="none" opacity=".5" stroke-dasharray="8,4"/><rect x="170" y="88" width="220" height="100" stroke="#C9A84C" stroke-width="1.5" fill="rgba(201,168,76,.04)" stroke-dasharray="5,3"/><text x="280" y="80" text-anchor="middle" font-family="monospace" font-size="11" fill="#C9A84C" opacity=".5">FUTURE BUILD</text><text x="280" y="145" text-anchor="middle" font-family="serif" font-size="36" fill="#4A9B6F" opacity=".25">?</text><text x="280" y="215" text-anchor="middle" font-family="monospace" font-size="9" fill="#4A9B6F" opacity=".45">ANNE STREET</text></svg>',
+  intl: '<svg class="gsvg" viewBox="0 0 560 240" xmlns="http://www.w3.org/2000/svg"><rect width="560" height="240" fill="#001828"/><rect width="560" height="124" fill="#001018"/><circle cx="86" cy="20" r="1.5" fill="white" opacity=".5"/><circle cx="202" cy="36" r="1.5" fill="#E8C97A" opacity=".6"/><ellipse cx="60" cy="124" rx="40" ry="68" fill="#0a2a0a" opacity=".9"/><ellipse cx="500" cy="116" rx="44" ry="58" fill="#0a2a0a" opacity=".9"/><rect x="0" y="164" width="560" height="76" fill="#003a5a" opacity=".9"/><path d="M0 174 Q140 168 280 174 Q420 180 560 172" stroke="#4A9B9B" stroke-width="1" fill="none" opacity=".4"/><rect x="218" y="158" width="124" height="6" fill="#5a4a2a" opacity=".8"/><rect x="210" y="102" width="140" height="72" fill="#1a2a2a"/><rect x="222" y="114" width="30" height="20" fill="#4A9B9B" opacity=".25" rx="1"/><rect x="278" y="114" width="30" height="20" fill="#4A9B9B" opacity=".25" rx="1"/></svg>',
+  nic: '<svg class="gsvg" viewBox="0 0 560 240" xmlns="http://www.w3.org/2000/svg"><rect width="560" height="240" fill="#001520"/><rect width="560" height="152" fill="#001018"/><rect x="0" y="170" width="560" height="70" fill="#001a3a" opacity=".95"/><path d="M0 182 Q65 175 130 182 Q195 189 260 178 Q325 167 390 178 Q455 189 560 182" stroke="#3a7a7a" stroke-width="1.5" fill="none" opacity=".5"/><path d="M0 148 Q96 118 190 136 Q284 154 378 118 Q438 98 560 116 L560 170 L0 170Z" fill="#0a1a0a"/><rect x="112" y="136" width="94" height="6" stroke="#C9A84C" stroke-width="1.5" fill="none" opacity=".4" stroke-dasharray="5,3"/><text x="159" y="128" text-anchor="middle" font-family="monospace" font-size="9" fill="#4A9B9B" opacity=".7">SJDS</text><rect x="346" y="142" width="94" height="6" stroke="#C9A84C" stroke-width="1.5" fill="none" opacity=".4" stroke-dasharray="5,3"/><text x="393" y="134" text-anchor="middle" font-family="monospace" font-size="9" fill="#4A9B9B" opacity=".7">PLAYA YANKEE</text></svg>'
+};
+
+var PROPS = [
+  {id:'p01', num:'TRH-001', tags:'active bellaire', name:'315 Seneca', nick:'“The Tara”', addr:'Bellaire, MI · Intermediate River', type:'Active STR', rl:'Mythic · Anchor', svg:SVG.river, beds:3, baths:2, sqft:1800, ev:314000,
+   lnote:'Riverfront · Docks · Hillside gardens · Seneca corridor anchor',
+   rev:{t:'str', rows:[{l:'Airbnb Net',v:16148,c:'inc'},{l:'VRBO (Est.)',v:16148,c:'inc'},{l:'Platform Fees',v:-5812,c:'exp'},{l:'Supplies + Ops',v:-7532,c:'exp'}], proj:'Target $45-60K NOI at optimization'},
+   exp:{pp:254750, lb:249000, rate:'--', balloon:'--', pi:15140, tax:2400, ins:1362, maint:2400, mgmt:0}},
+
+  {id:'p02', num:'TRH-002', tags:'active', name:'535 Ethel', addr:'Grand Rapids, MI', type:'Active LTR', rl:'LTR · GR Cashflow', svg:SVG.gr, beds:3, baths:1, sqft:1200, ev:289400,
+   lnote:'23% LTV · Primary leverage asset for Phase 2',
+   rev:{t:'ltr', rent:1500, pi:354.72, tax:200, mgmt:.05},
+   exp:{pp:92000, lb:68000, rate:'--', balloon:'--', pi:4257, tax:1200, ins:1200, maint:1200, mgmt:900}},
+
+  {id:'p03', num:'TRH-003', tags:'active', name:'1032 Watson', addr:'Grand Rapids, MI', type:'Active LTR', rl:'LTR · GR Cashflow', svg:SVG.gr, beds:4, baths:2, sqft:1600, ev:238000,
+   lnote:'50% LTV · Highest rent · Combined GR equity $340K+',
+   rev:{t:'ltr', rent:1900, pi:603.97, tax:200, mgmt:.05},
+   exp:{pp:149000, lb:119200, rate:'--', balloon:'--', pi:7248, tax:1200, ins:1200, maint:1200, mgmt:1140}},
+
+  {id:'p04', num:'TRH-004', tags:'active bellaire future', name:'320 Park', addr:'Bellaire, MI', type:'LTR + Lot Split', rl:'$25K Raise Open', svg:SVG.park, beds:3, baths:1, sqft:1400, ev:275000,
+   lnote:'Lot split creates 101 Anne St parcel · $25K raise for debt retirement',
+   rev:{t:'ltr', rent:1600, pi:603.97, tax:200, mgmt:.05},
+   exp:{pp:149000, lb:119000, rate:'--', balloon:'--', pi:7248, tax:1400, ins:1200, maint:800, mgmt:960}},
+
+  {id:'p05', num:'TRH-005', tags:'residence bellaire', name:'104 Court', addr:'Bellaire, MI · Residence', type:'Residence', rl:'Primary Residence', svg:SVG.court, beds:3, baths:2, sqft:1600, ev:244200,
+   lnote:'Zero debt · ADU renovation in progress · Future STR or LTR income',
+   rev:{t:'fut', rows:[{l:'Future ADU Revenue',v:0,c:'proj'}], proj:'Income TBD pending ADU completion'},
+   exp:{pp:101000, lb:0, rate:'Paid Off', balloon:'--', pi:0, tax:1600, ins:1200, maint:15000, mgmt:0}},
+
+  {id:'p06', num:'TRH-006', tags:'bellaire future', name:'104 Court ADU', addr:'Bellaire, MI · Accessory Unit', type:'Future STR · Priority', rl:'Priority Project', svg:SVG.adu, beds:1, baths:1, sqft:600, ev:0,
+   lnote:'Next income project · Faster completion = sooner revenue · STR target $25-40K/yr',
+   rev:{t:'fut', rows:[{l:'STR Target Revenue',v:32500,c:'inc'},{l:'Est. Platform Fees',v:-5850,c:'exp'}], proj:'$25-40K/yr · Zero debt = pure cashflow'},
+   exp:{pp:0, lb:0, rate:'--', balloon:'--', pi:0, tax:0, ins:600, maint:0, mgmt:0}},
+
+  {id:'p07', num:'TRH-007', tags:'bellaire future', name:'313 Seneca', addr:'Bellaire, MI · Tower Home', type:'Future STR', rl:'Legendary · Tower', svg:SVG.tower, beds:3, baths:3, sqft:2200, ev:125000,
+   lnote:'5-year balloon note · Premium ADR destination · Seneca corridor',
+   rev:{t:'fut', rows:[{l:'Projected Revenue',v:62500,c:'inc'},{l:'Est. Expenses',v:-20000,c:'exp'}], proj:'$45-80K/yr · High ADR potential'},
+   exp:{pp:85000, lb:80000, rate:'--', balloon:'5-yr note', pi:0, tax:800, ins:800, maint:0, mgmt:0}},
+
+  {id:'p08', num:'TRH-008', tags:'bellaire future', name:'Riverside Home A', addr:'316 Seneca · Bellaire, MI', type:'Future STR', rl:'Epic · Hillside Pier', svg:SVG.hills, beds:2, baths:2, sqft:1440, ev:0,
+   lnote:'Combined A+B target $110-190K/yr · Hillside pier design',
+   rev:{t:'fut', rows:[{l:'Projected Revenue',v:75000,c:'inc'},{l:'Est. Expenses',v:-22000,c:'exp'}], proj:'$55-95K/yr · Premium riverfront'},
+   exp:{pp:0, lb:0, rate:'--', balloon:'--', pi:0, tax:0, ins:0, maint:0, mgmt:0}},
+
+  {id:'p09', num:'TRH-009', tags:'bellaire future', name:'Riverside Home B', addr:'314 Seneca · Bellaire, MI', type:'Future STR', rl:'Epic · Mirrored Unit', svg:SVG.hills, beds:2, baths:2, sqft:1440, ev:0,
+   lnote:'Mirror of Home A · Same ADR target · Combined corridor play',
+   rev:{t:'fut', rows:[{l:'Projected Revenue',v:75000,c:'inc'},{l:'Est. Expenses',v:-22000,c:'exp'}], proj:'$55-95K/yr · Mirror unit'},
+   exp:{pp:0, lb:0, rate:'--', balloon:'--', pi:0, tax:0, ins:0, maint:0, mgmt:0}},
+
+  {id:'p10', num:'TRH-010', tags:'bellaire future', name:'101 Anne Street', addr:'Lot Split · Bellaire, MI', type:'Future · Lot Split', rl:'Value Creation', svg:SVG.lot, beds:0, baths:0, sqft:0, ev:65000,
+   lnote:'~16x return on split cost · Separate buildable parcel',
+   rev:{t:'fut', rows:[{l:'Est. Lot Value',v:65000,c:'inc'},{l:'Split Cost',v:-5000,c:'exp'}], proj:'Build or sell · High optionality'},
+   exp:{pp:0, lb:0, rate:'--', balloon:'--', pi:0, tax:0, ins:0, maint:5000, mgmt:0}},
+
+  {id:'p11', num:'TRH-011', tags:'intl future', name:'Orchid Bay D58', addr:'Belize · Caribbean', type:'Future STR', rl:'International', svg:SVG.intl, beds:2, baths:2, sqft:0, ev:0,
+   lnote:'USD-pegged · Zero currency risk · Caribbean STR market',
+   rev:{t:'fut', rows:[{l:'Caribbean STR Target',v:50000,c:'inc'}], proj:'USD-pegged · Stable returns'},
+   exp:{pp:0, lb:0, rate:'--', balloon:'--', pi:0, tax:0, ins:0, maint:0, mgmt:0}},
+
+  {id:'p12', num:'TRH-012', tags:'intl future', name:'Nicaragua Holdings', addr:'San Juan del Sur + Playa Yankee', type:'2 Parcels · Future', rl:'International · Pacific', svg:SVG.nic, beds:0, baths:0, sqft:0, ev:0,
+   lnote:'SJDS + Playa Yankee · Pacific coast appreciation play',
+   rev:{t:'fut', rows:[{l:'Long-Term Hold',v:0,c:'proj'}], proj:'High-growth STR corridor'},
+   exp:{pp:0, lb:0, rate:'--', balloon:'--', pi:0, tax:0, ins:0, maint:0, mgmt:0}}
+];
+
+(function checkSession() {
+  var r = sessionStorage.getItem('role');
+  if (r) { ADMIN = (r === 'admin'); doGo(r); }
+})();
+</script>
+</body>
+</html>
