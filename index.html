@@ -1,131 +1,83 @@
-
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>ANAND Portal</title>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Cormorant+Garamond:wght@400;600&family=Courier+Prime&display=swap" rel="stylesheet">
-
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Monopoly Portal</title>
 <style>
 body{
-background:#060606;
-color:#e6d3a3;
-font-family:"Cormorant Garamond",serif;
-margin:0;
-height:100vh;
-display:grid;
-grid-template-columns:1fr 1fr 1fr;
-align-items:center;
+    background:#0b0b0b;
+    color:#e5d3a3;
+    font-family: Georgia, "Times New Roman", serif;
+    height:100vh;
+    margin:0;
+    display:flex;
+    align-items:center;
+    justify-content:center;
 }
-
-.left{ padding:80px; }
-
-.left h1{
-font-size:64px;
-line-height:1.1;
-color:#d6b15b;
-}
-
-.stats{
-margin-top:40px;
-font-size:18px;
-}
-
-.center{ text-align:center; }
-
-.logo{
-font-family:"Playfair Display";
-font-size:42px;
-letter-spacing:6px;
-margin-bottom:20px;
-}
-
-.lens{
-width:320px;
-height:320px;
-border-radius:50%;
-border:6px solid #caa84a;
-overflow:hidden;
-margin:auto;
-box-shadow:0 0 60px rgba(201,168,76,.3);
-}
-
-.lens img{
-width:100%;
-height:100%;
-object-fit:cover;
-}
-
-.code{ margin-top:30px; }
-
-.code input{
-background:none;
-border:1px solid #caa84a;
-padding:12px;
-width:200px;
-color:#fff;
-text-align:center;
-}
-
-.code button{
-margin-top:10px;
-padding:10px 30px;
-background:#caa84a;
-border:none;
-cursor:pointer;
-}
-
-.right{ padding:80px; }
 
 .portal{
-border:1px solid rgba(255,255,255,.15);
-padding:20px;
-margin-bottom:20px;
-cursor:pointer;
+    text-align:center;
+    border:1px solid rgba(255,255,255,0.15);
+    padding:60px;
+    border-radius:10px;
 }
 
-.portal:hover{ border-color:#caa84a; }
+h1{
+    font-size:40px;
+    margin-bottom:10px;
+}
+
+input{
+    padding:12px;
+    width:220px;
+    text-align:center;
+    background:#111;
+    border:1px solid rgba(255,255,255,0.25);
+    color:white;
+}
+
+button{
+    margin-top:12px;
+    padding:10px 30px;
+    cursor:pointer;
+}
 </style>
 </head>
 
 <body>
 
-<div class="left">
-<h1>Built property by property.<br>Position by position.</h1>
-<div class="stats">
-15 Properties<br>
-4 Countries<br>
-$1.8M+ Portfolio Value
-</div>
-</div>
+<div class="portal">
+<h1>My Monopoly Portal</h1>
+<p>Enter Access Code</p>
 
-<div class="center">
-<div class="logo">ANAND</div>
+<input id="code" type="password" autofocus>
 
-<div class="lens">
-<img src="lens.jpg">
-</div>
-
-<div class="code">
-<input id="code" placeholder="ACCESS CODE">
 <br>
-<button onclick="enter()">ENTER</button>
-</div>
-</div>
 
-<div class="right">
-<div class="portal" onclick="enter()">🏠 Real Estate</div>
-<div class="portal">📈 War Room</div>
-<div class="portal">₿ Crypto</div>
+<button onclick="login()">Enter</button>
 </div>
 
 <script>
-function enter(){
-let code=document.getElementById("code").value;
-if(code==="tara"){
-window.location="tara-cards-dashboard.html";
+
+function login(){
+
+    const pass = document.getElementById("code").value;
+
+    if(pass === "tara"){
+        window.location.href = "tara-river-homes-cards.html";
+    } else {
+        alert("Incorrect code");
+    }
+
 }
-}
+
+document.getElementById("code").addEventListener("keydown", function(e){
+    if(e.key === "Enter"){
+        login();
+    }
+});
+
 </script>
 
 </body>
