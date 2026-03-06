@@ -4,43 +4,52 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>My Monopoly Portal</title>
+
 <style>
 body{
-    background:#0b0b0b;
-    color:#e5d3a3;
-    font-family: Georgia, "Times New Roman", serif;
-    height:100vh;
     margin:0;
+    height:100vh;
     display:flex;
-    align-items:center;
     justify-content:center;
+    align-items:center;
+    background:#0a0a0a;
+    font-family:Georgia,serif;
+    color:#d4af37;
 }
 
 .portal{
     text-align:center;
-    border:1px solid rgba(255,255,255,0.15);
-    padding:60px;
-    border-radius:10px;
+    width:340px;
 }
 
 h1{
-    font-size:40px;
+    font-size:48px;
     margin-bottom:10px;
 }
 
+p{
+    letter-spacing:4px;
+    font-size:12px;
+    margin-bottom:25px;
+}
+
 input{
-    padding:12px;
-    width:220px;
+    width:100%;
+    padding:14px;
     text-align:center;
     background:#111;
-    border:1px solid rgba(255,255,255,0.25);
+    border:1px solid #444;
     color:white;
+    margin-bottom:14px;
 }
 
 button{
-    margin-top:12px;
-    padding:10px 30px;
+    width:100%;
+    padding:14px;
+    background:#c9a84c;
+    border:none;
     cursor:pointer;
+    letter-spacing:3px;
 }
 </style>
 </head>
@@ -48,33 +57,32 @@ button{
 <body>
 
 <div class="portal">
+
 <h1>My Monopoly Portal</h1>
-<p>Enter Access Code</p>
+<p>PORTFOLIO ACCESS</p>
 
-<input id="code" type="password" autofocus>
+<input id="pw" type="password" placeholder="access code" autofocus>
 
-<br>
+<button onclick="enterPortal()">ENTER PORTAL</button>
 
-<button onclick="login()">Enter</button>
 </div>
 
 <script>
 
-function login(){
+function enterPortal(){
 
-    const pass = document.getElementById("code").value;
+    var code = document.getElementById("pw").value;
 
-    if(pass === "tara"){
+    if(code === "bellaire2025"){
         window.location.href = "tara-river-homes-cards.html";
     } else {
-        alert("Incorrect code");
+        alert("incorrect code");
     }
-
 }
 
-document.getElementById("code").addEventListener("keydown", function(e){
-    if(e.key === "Enter"){
-        login();
+document.getElementById("pw").addEventListener("keydown",function(e){
+    if(e.key==="Enter"){
+        enterPortal();
     }
 });
 
