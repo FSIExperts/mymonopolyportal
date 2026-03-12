@@ -268,7 +268,7 @@ function showModal(type){document.getElementById('loginState').style.display=typ
 function closeModal(e){if(e.target===document.getElementById('modalBg'))closeModalDirect();}
 function closeModalDirect(){document.getElementById('modalBg').classList.remove('show');}
 var PORTFOLIOS={'anand holdings':{pwd:'bellaire2025',url:'anand-holdings-v4.html'}};
-function doLogin(){var p=document.getElementById('loginPortfolio').value.trim().toLowerCase(),pw=document.getElementById('loginPwd').value.trim().toLowerCase(),m=PORTFOLIOS[p];if(m&&pw===m.pwd){sessionStorage.setItem('anand_auth','1');window.location.href=m.url;}else{document.getElementById('loginErr').textContent='Portfolio name or access code incorrect.';document.getElementById('loginPwd').value='';setTimeout(function(){document.getElementById('loginErr').textContent='';},2500);}}
+function doLogin(){var p=document.getElementById('loginPortfolio').value.trim().toLowerCase(),pw=document.getElementById('loginPwd').value.trim().toLowerCase(),m=PORTFOLIOS[p];if(m&&pw===m.pwd){sessionStorage.setItem('anand_auth','1');sessionStorage.setItem('role','admin');window.location.href=m.url;}else{document.getElementById('loginErr').textContent='Portfolio name or access code incorrect.';document.getElementById('loginPwd').value='';setTimeout(function(){document.getElementById('loginErr').textContent='';},2500);}}
 </script>
 </body>
 </html>
