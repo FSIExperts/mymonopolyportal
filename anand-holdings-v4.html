@@ -17,18 +17,112 @@
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
 body{background:var(--black);min-height:100vh;font-family:"Cormorant Garamond",serif;color:var(--cream);overflow-x:hidden;}
 
-/* LOGIN */
-#ls{position:fixed;inset:0;background:var(--black);display:flex;align-items:center;justify-content:center;z-index:9999;}
-.lb{display:flex;flex-direction:column;align-items:center;gap:16px;width:min(340px,90vw);}
-.ll{font-family:"Playfair Display",serif;font-size:64px;font-weight:900;background:linear-gradient(160deg,var(--gold-lt),var(--gold),var(--gold-dk));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:-3px;}
-.ln{font-family:"Playfair Display",serif;font-size:22px;font-weight:700;color:var(--cream);text-align:center;}
-.ls2{font-family:"Courier Prime",monospace;font-size:9px;letter-spacing:5px;text-transform:uppercase;color:var(--gold);opacity:.6;margin-bottom:14px;}
-.lb input{width:100%;padding:15px 18px;background:var(--char);border:1px solid rgba(201,168,76,.3);color:var(--cream);font-family:"Courier Prime",monospace;font-size:20px;letter-spacing:8px;text-align:center;outline:none;border-radius:2px;transition:border-color .2s;}
-.lb input:focus{border-color:var(--gold);}
-.lb input::placeholder{letter-spacing:3px;font-size:12px;opacity:.4;}
-.lb button{width:100%;padding:15px;background:var(--gold);color:var(--black);border:none;cursor:pointer;font-family:"Courier Prime",monospace;font-size:11px;letter-spacing:4px;text-transform:uppercase;border-radius:2px;transition:background .2s;}
-.lb button:hover{background:var(--gold-lt);}
-.lerr{font-family:"Courier Prime",monospace;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--red);min-height:18px;}
+/* ═══════════════════════════════════════════
+   CINEMATIC LOGIN SCENE
+═══════════════════════════════════════════ */
+#ls{position:fixed;inset:0;background:var(--black);z-index:9999;overflow:hidden;}
+
+/* Ghost card grid behind lens */
+#ls-cards{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;gap:20px;padding:40px;pointer-events:none;}
+.lc-ghost{width:200px;height:300px;border-radius:10px;border:1px solid rgba(201,168,76,.12);background:var(--char);flex-shrink:0;opacity:.35;animation:ghostFloat 6s ease-in-out infinite;}
+.lc-ghost:nth-child(1){animation-delay:0s; transform:rotate(-4deg);}
+.lc-ghost:nth-child(2){animation-delay:.8s; transform:rotate(-1.5deg);}
+.lc-ghost:nth-child(3){animation-delay:1.6s; transform:rotate(0deg); opacity:.5;}
+.lc-ghost:nth-child(4){animation-delay:2.4s; transform:rotate(1.5deg);}
+.lc-ghost:nth-child(5){animation-delay:3.2s; transform:rotate(3.5deg);}
+.lc-ghost-top{height:90px;background:rgba(201,168,76,.08);border-radius:8px 8px 0 0;position:relative;overflow:hidden;}
+.lc-ghost-top::after{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(201,168,76,.15) 0%,transparent 60%);}
+.lc-ghost-body{padding:10px;display:flex;flex-direction:column;gap:6px;}
+.lc-ghost-line{height:7px;border-radius:3px;background:rgba(201,168,76,.1);}
+.lc-ghost-line.w80{width:80%;}
+.lc-ghost-line.w55{width:55%;}
+.lc-ghost-line.w65{width:65%;}
+.lc-ghost-plate{height:18px;border-radius:2px;background:linear-gradient(135deg,rgba(139,115,54,.3),rgba(201,168,76,.25));margin-top:8px;width:90%;}
+
+@keyframes ghostFloat{
+  0%,100%{transform:translateY(0px) rotate(var(--rot,0deg));}
+  50%{transform:translateY(-12px) rotate(var(--rot,0deg));}
+}
+.lc-ghost:nth-child(1){--rot:-4deg;}
+.lc-ghost:nth-child(2){--rot:-1.5deg;}
+.lc-ghost:nth-child(3){--rot:0deg;}
+.lc-ghost:nth-child(4){--rot:1.5deg;}
+.lc-ghost:nth-child(5){--rot:3.5deg;}
+
+/* Lens */
+#ls-lens{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:320px;height:320px;z-index:10;}
+.ls-ring{position:absolute;inset:0;border-radius:50%;border:3px solid var(--gold);box-shadow:0 0 40px rgba(201,168,76,.25),inset 0 0 60px rgba(201,168,76,.06);}
+.ls-ring-outer{position:absolute;inset:-8px;border-radius:50%;border:1px solid rgba(201,168,76,.2);}
+.ls-inner{position:absolute;inset:8px;border-radius:50%;overflow:hidden;background:var(--char);cursor:pointer;}
+.ls-tara{position:absolute;inset:0;border-radius:50%;overflow:hidden;}
+.ls-tara svg{width:100%;height:100%;display:block;}
+.ls-vignette{position:absolute;inset:0;border-radius:50%;background:radial-gradient(circle at center,transparent 40%,rgba(0,0,0,.6) 100%);}
+
+/* AH Monogram on lens */
+#ls-ah{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);z-index:20;text-align:center;pointer-events:none;transition:all 1.2s cubic-bezier(.4,0,.2,1);}
+.ls-ah-text{font-family:"Playfair Display",serif;font-size:72px;font-weight:900;background:linear-gradient(160deg,var(--gold-lt),var(--gold),var(--gold-dk));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:-4px;line-height:1;text-shadow:none;}
+.ls-tap{font-family:"Courier Prime",monospace;font-size:9px;letter-spacing:5px;text-transform:uppercase;color:var(--gold);opacity:.6;margin-top:6px;animation:tapPulse 2s ease-in-out infinite;}
+@keyframes tapPulse{0%,100%{opacity:.6;}50%{opacity:.2;}}
+
+/* Login form inside lens */
+#ls-form{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);z-index:25;width:260px;display:none;flex-direction:column;align-items:center;gap:12px;}
+#ls-form input{width:100%;padding:13px 16px;background:rgba(10,10,10,.9);border:1px solid rgba(201,168,76,.35);color:var(--cream);font-family:"Courier Prime",monospace;font-size:18px;letter-spacing:6px;text-align:center;outline:none;border-radius:2px;transition:border-color .2s;}
+#ls-form input:focus{border-color:var(--gold);}
+#ls-form input::placeholder{letter-spacing:3px;font-size:11px;opacity:.4;}
+#ls-form button{width:100%;padding:13px;background:var(--gold);color:var(--black);border:none;cursor:pointer;font-family:"Courier Prime",monospace;font-size:10px;letter-spacing:4px;text-transform:uppercase;border-radius:2px;transition:background .2s;}
+#ls-form button:hover{background:var(--gold-lt);}
+.ls-form-eyebrow{font-family:"Courier Prime",monospace;font-size:9px;letter-spacing:4px;text-transform:uppercase;color:var(--gold);opacity:.7;}
+.lerr{font-family:"Courier Prime",monospace;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--red);min-height:16px;text-align:center;}
+
+/* GH token field */
+#ls-ghtf{display:none;width:100%;flex-direction:column;gap:6px;}
+#ls-ghtf label{font-family:"Courier Prime",monospace;font-size:8px;letter-spacing:3px;text-transform:uppercase;color:var(--gold);opacity:.5;text-align:center;}
+#ls-ghtf input{width:100%;padding:10px 12px;background:rgba(10,10,10,.9);border:1px solid rgba(201,168,76,.2);color:var(--cream);font-family:"Courier Prime",monospace;font-size:11px;letter-spacing:2px;outline:none;border-radius:2px;}
+
+/* Lens expand overlay */
+#ls-expand{position:absolute;inset:0;z-index:50;pointer-events:none;opacity:0;}
+
+/* ─── CINEMATIC STATE CLASSES ─── */
+
+/* Phase 1 → 2: tap shows form */
+#ls.form-open #ls-ah .ls-tap{display:none;}
+#ls.form-open #ls-ah .ls-ah-text{font-size:36px;transform:translateY(-80px);}
+#ls.form-open #ls-form{display:flex;}
+
+/* Phase 3: AH flies to header */
+@keyframes ahFlyUp{
+  0%{opacity:1;transform:translate(-50%,-50%) scale(1);}
+  100%{opacity:0;transform:translate(-50%, -480px) scale(0.5);}
+}
+#ls.auth-ok #ls-ah{animation:ahFlyUp 1.0s cubic-bezier(.4,0,.15,1) forwards;}
+#ls.auth-ok #ls-form{opacity:0;transition:opacity .3s;}
+
+/* Phase 4: lens expands */
+@keyframes lensExpand{
+  0%{transform:translate(-50%,-50%) scale(1);opacity:1;}
+  100%{transform:translate(-50%,-50%) scale(20);opacity:0;}
+}
+#ls.lens-expand #ls-lens{animation:lensExpand 1.4s cubic-bezier(.4,0,.2,1) forwards;animation-delay:.7s;}
+#ls.lens-expand #ls-cards{animation:fadeOut .5s ease forwards;}
+@keyframes fadeOut{to{opacity:0;}}
+
+/* Phase 5: screen wipe */
+@keyframes lsExit{
+  0%{opacity:1;}
+  100%{opacity:0;}
+}
+#ls.scene-exit{animation:lsExit .5s ease forwards;pointer-events:none;}
+
+/* Header AH logo mark */
+#h-logo{display:inline-flex;align-items:center;justify-content:center;width:42px;height:42px;border:2px solid var(--gold);border-radius:50%;margin-right:14px;flex-shrink:0;vertical-align:middle;opacity:0;transform:translateY(-10px);transition:opacity .6s ease .2s, transform .6s ease .2s;background:linear-gradient(135deg,rgba(201,168,76,.08),transparent);}
+#h-logo.visible{opacity:1;transform:translateY(0);}
+#h-logo span{font-family:"Playfair Display",serif;font-size:16px;font-weight:900;background:linear-gradient(160deg,var(--gold-lt),var(--gold),var(--gold-dk));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:-1px;}
+.h-title-wrap{display:inline-flex;align-items:center;justify-content:center;}
+h1{font-family:"Playfair Display",serif;font-size:clamp(24px,3vw,42px);font-weight:900;background:linear-gradient(135deg,var(--gold-lt),var(--gold),var(--gold-dk));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:-1px;margin-bottom:4px;opacity:0;transform:translateY(8px);transition:opacity .6s ease .4s, transform .6s ease .4s;}
+h1.visible{opacity:1;transform:translateY(0);}
+
+/* Flying AH for animation (positioned over header) */
+#ah-fly{position:fixed;z-index:10000;pointer-events:none;opacity:0;font-family:"Playfair Display",serif;font-size:72px;font-weight:900;background:linear-gradient(160deg,var(--gold-lt),var(--gold),var(--gold-dk));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:-4px;transform-origin:center center;}
 
 /* ADMIN BANNER */
 #ab{display:none;align-items:center;justify-content:space-between;background:rgba(201,168,76,.08);border-bottom:1px solid rgba(201,168,76,.2);padding:8px 28px;}
@@ -40,7 +134,6 @@ body{background:var(--black);min-height:100vh;font-family:"Cormorant Garamond",s
 /* HEADER */
 header{text-align:center;padding:20px 20px 12px;}
 .btag{font-family:"Courier Prime",monospace;font-size:10px;letter-spacing:6px;text-transform:uppercase;color:var(--gold);opacity:.7;margin-bottom:6px;}
-h1{font-family:"Playfair Display",serif;font-size:clamp(24px,3vw,42px);font-weight:900;background:linear-gradient(135deg,var(--gold-lt),var(--gold),var(--gold-dk));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:-1px;margin-bottom:4px;}
 .hs{font-style:italic;font-size:15px;color:var(--cream2);opacity:.55;margin-bottom:14px;}
 
 /* FILTER TABS */
@@ -234,7 +327,15 @@ footer{border-top:1px solid rgba(201,168,76,.1);padding:14px 28px;margin-top:8px
 /* RESPONSIVE */
 @media(min-width:1000px){:root{--cw:440px;--ch:640px;}}
 @media(min-width:1400px){:root{--cw:460px;--ch:660px;}}
-@media(max-width:650px){:root{--cw:calc(100vw - 40px);--ch:760px;}.tr{padding:14px 20px;}}
+@media(max-width:650px){
+  :root{--cw:calc(100vw - 32px);--ch:calc(100svh - 120px);}
+  .tr{padding:10px 16px;}
+  #ls-lens{width:220px;height:220px;}
+  #ls-ah .ls-ah-text{font-size:28px;}
+  #ls-ah .ls-tap{font-size:9px;}
+  #ls-cards{gap:10px;padding:20px;}
+  .lc-ghost{width:140px;height:200px;}
+}
 
 /* COMPACT MODE */
 body.compact{--cw:300px;--ch:520px;}
@@ -251,19 +352,66 @@ body.compact .pll{font-size:9px;}
 <body>
 
 <div id="ls">
-  <div class="lb">
-    <div class="ll">AH</div>
-    <div class="ln">ANAND Holdings, LLC</div>
-    <div class="ls2">Portfolio Access</div>
-    <input type="password" id="pi" placeholder="access code" autocomplete="off" onkeydown="if(event.key==='Enter')checkAdminCode()">
-    <div id="ghtf" style="display:none;width:100%">
-      <div style="font-family:'Courier Prime',monospace;font-size:8px;letter-spacing:3px;text-transform:uppercase;color:var(--gold);opacity:.5;text-align:center;margin-bottom:6px;">GitHub Token (optional)</div>
-      <input type="password" id="ght" placeholder="github_pat_..." autocomplete="off" style="width:100%;padding:12px 14px;background:var(--char);border:1px solid rgba(201,168,76,.2);color:var(--cream);font-family:'Courier Prime',monospace;font-size:11px;letter-spacing:2px;outline:none;border-radius:2px;" onkeydown="if(event.key==='Enter')doAuth()">
+  <!-- Ghost card grid -->
+  <div id="ls-cards">
+    <div class="lc-ghost"><div class="lc-ghost-top"></div><div class="lc-ghost-body"><div class="lc-ghost-line w80"></div><div class="lc-ghost-line w55"></div><div class="lc-ghost-line w65"></div><div class="lc-ghost-plate"></div></div></div>
+    <div class="lc-ghost"><div class="lc-ghost-top"></div><div class="lc-ghost-body"><div class="lc-ghost-line w65"></div><div class="lc-ghost-line w80"></div><div class="lc-ghost-line w55"></div><div class="lc-ghost-plate"></div></div></div>
+    <div class="lc-ghost"><div class="lc-ghost-top"></div><div class="lc-ghost-body"><div class="lc-ghost-line w80"></div><div class="lc-ghost-line w65"></div><div class="lc-ghost-line w80"></div><div class="lc-ghost-plate"></div></div></div>
+    <div class="lc-ghost"><div class="lc-ghost-top"></div><div class="lc-ghost-body"><div class="lc-ghost-line w55"></div><div class="lc-ghost-line w80"></div><div class="lc-ghost-line w65"></div><div class="lc-ghost-plate"></div></div></div>
+    <div class="lc-ghost"><div class="lc-ghost-top"></div><div class="lc-ghost-body"><div class="lc-ghost-line w65"></div><div class="lc-ghost-line w55"></div><div class="lc-ghost-line w80"></div><div class="lc-ghost-plate"></div></div></div>
+  </div>
+
+  <!-- Lens -->
+  <div id="ls-lens">
+    <div class="ls-ring-outer"></div>
+    <div class="ls-ring"></div>
+    <div class="ls-inner" id="ls-lens-inner" onclick="lensClick()">
+      <div class="ls-tara">
+        <svg viewBox="0 0 320 320" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;">
+          <rect width="320" height="320" fill="#0a1a2e"/>
+          <circle cx="46" cy="14" r="1.5" fill="#E8C97A" opacity=".8"/>
+          <circle cx="115" cy="8" r="1.2" fill="white" opacity=".5"/>
+          <circle cx="195" cy="18" r="1.5" fill="#E8C97A" opacity=".6"/>
+          <circle cx="275" cy="6" r="1.2" fill="white" opacity=".4"/>
+          <path d="M0 170 Q80 140 160 155 Q240 170 320 138 L320 320 L0 320Z" fill="#1a3a2a"/>
+          <path d="M0 195 Q66 165 133 180 Q200 195 266 162 Q298 145 320 157 L320 320 L0 320Z" fill="#2a5a3a"/>
+          <rect x="0" y="225" width="320" height="95" fill="#0d2a3a" opacity=".9"/>
+          <path d="M20 232 Q80 228 160 232 Q240 236 300 230" stroke="#C9A84C" stroke-width="1" fill="none" opacity=".3"/>
+          <rect x="123" y="210" width="74" height="3" fill="#050505" opacity=".9"/>
+          <rect x="131" y="202" width="3" height="12" fill="#050505" opacity=".9"/>
+          <rect x="190" y="205" width="3" height="10" fill="#050505" opacity=".9"/>
+          <rect x="104" y="128" width="72" height="76" fill="#0d1a0d" opacity=".9"/>
+          <polygon points="100,128 180,128 140,96" fill="#0d0d10" opacity=".95"/>
+          <rect x="112" y="140" width="16" height="14" fill="#C9A84C" opacity=".28" rx="1"/>
+          <rect x="145" y="140" width="16" height="14" fill="#C9A84C" opacity=".28" rx="1"/>
+          <text x="160" y="88" text-anchor="middle" font-family="serif" font-size="11" fill="#C9A84C" opacity=".9" font-style="italic">The Tara</text>
+        </svg>
+      </div>
+      <div class="ls-vignette"></div>
     </div>
-    <button onclick="doAuth()">Enter Portfolio</button>
+  </div>
+
+  <!-- AH monogram (on top of lens) -->
+  <div id="ls-ah">
+    <div class="ls-ah-text">AH</div>
+    <div class="ls-tap">tap to enter</div>
+  </div>
+
+  <!-- Login form (hidden inside lens, shown on tap) -->
+  <div id="ls-form">
+    <div class="ls-form-eyebrow">ANAND Holdings</div>
+    <input type="password" id="pwd" placeholder="access code" autocomplete="off" onkeydown="if(event.key==='Enter')checkAdminCode()">
+    <div id="ls-ghtf">
+      <label>GitHub Token (optional)</label>
+      <input type="password" id="ght" placeholder="github_pat_..." autocomplete="off" onkeydown="if(event.key==='Enter')doAuth()">
+    </div>
+    <button onclick="doAuth()">Enter Portfolio →</button>
     <div id="aerr" class="lerr"></div>
   </div>
 </div>
+
+<!-- Flying AH element (used during auth animation) -->
+<div id="ah-fly">AH</div>
 
 <div id="site" style="display:none">
   <div id="ab">
@@ -272,7 +420,10 @@ body.compact .pll{font-size:9px;}
   </div>
   <header>
     <div class="btag">Portfolio Deck &middot; Established 2015</div>
-    <h1>ANAND Holdings, LLC</h1>
+    <div class="h-title-wrap">
+      <div id="h-logo"><span>AH</span></div>
+      <h1 id="h1-text">ANAND Holdings, LLC</h1>
+    </div>
     <div class="hs">Michigan &middot; Belize &middot; Nicaragua &middot; Mexico</div>
   </header>
   <div class="tabs">
@@ -338,42 +489,128 @@ var GH_TOKEN = '';
 var GH_REPO = 'FSIExperts/mymonopolyportal';
 var GH_BRANCH = 'main';
 
+// ── CINEMATIC LOGIN ──────────────────────────────────────
+var lensOpen = false;
+
+function lensClick() {
+  if (lensOpen) return;
+  lensOpen = true;
+  // Fade out AH monogram, show form inside lens area
+  var ls = document.getElementById('ls');
+  ls.classList.add('form-open');
+  // Reposition form centered over lens
+  var form = document.getElementById('ls-form');
+  form.style.display = 'flex';
+  setTimeout(function(){ document.getElementById('pwd').focus(); }, 200);
+}
+
 function checkAdminCode() {
-  var v = document.getElementById('pi').value.trim().toLowerCase();
+  var v = document.getElementById('pwd').value.trim().toLowerCase();
   if (v === APWD) {
-    // Show GitHub token field before entering
-    document.getElementById('ghtf').style.display = 'block';
+    var ghtf = document.getElementById('ls-ghtf');
+    ghtf.style.display = 'flex';
     document.getElementById('ght').focus();
     document.getElementById('aerr').textContent = '';
   } else {
     doAuth();
   }
 }
+
 function doAuth() {
-  var v = document.getElementById('pi').value.trim().toLowerCase();
+  var v = document.getElementById('pwd').value.trim().toLowerCase();
+  var role;
   if (v === APWD) {
     ADMIN = true;
     GH_TOKEN = (document.getElementById('ght').value || '').trim();
-    doGo('admin');
+    role = 'admin';
   } else if (v === IPWD) {
     ADMIN = false;
-    doGo('investor');
+    role = 'investor';
   } else {
     document.getElementById('aerr').textContent = 'Incorrect code';
-    document.getElementById('pi').value = '';
-    document.getElementById('ghtf').style.display = 'none';
+    document.getElementById('pwd').value = '';
+    document.getElementById('ls-ghtf').style.display = 'none';
+    return;
   }
+  runCinematic(role);
 }
-function doGo(role) {
-  sessionStorage.setItem('role', role);
-  document.getElementById('ls').style.display = 'none';
-  document.getElementById('site').style.display = 'block';
-  if (role === 'admin') { document.body.classList.add('admin'); document.getElementById('ab').classList.add('on'); }
-  buildAll();
-  setupEvents();
-  setupScrollbar();
-  loadPhotos();
+
+function runCinematic(role) {
+  var ls = document.getElementById('ls');
+  var ahEl = document.getElementById('ls-ah');
+  var ahFly = document.getElementById('ah-fly');
+  var hLogo = document.getElementById('h-logo');
+  var h1 = document.getElementById('h1-text');
+  var lensEl = document.getElementById('ls-lens');
+
+  // Get current AH position (center of screen)
+  var ahRect = ahEl.getBoundingClientRect();
+
+  // Prepare flying AH clone
+  ahFly.style.cssText = 'position:fixed;z-index:10000;pointer-events:none;'
+    + 'font-family:"Playfair Display",serif;font-size:72px;font-weight:900;'
+    + 'letter-spacing:-4px;'
+    + 'background:linear-gradient(160deg,#E8C97A,#C9A84C,#8B6914);'
+    + '-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;'
+    + 'left:' + (ahRect.left + ahRect.width/2) + 'px;'
+    + 'top:' + (ahRect.top + ahRect.height/2) + 'px;'
+    + 'transform:translate(-50%,-50%) scale(1);'
+    + 'transition:none;opacity:1;';
+
+  // Phase 1: hide form, show flying AH
+  ls.classList.add('auth-ok');
+
+  // Phase 2: after short delay, animate AH to header position
+  setTimeout(function(){
+    // Find where h-logo will land
+    // Site is about to become visible, so we estimate header position
+    var headerTop = 60; // rough px from top for the AH logo area
+    var centerX = window.innerWidth / 2;
+
+    // We want AH to land at the logo position in the header
+    // Logo is inline in centered header, so roughly centerX - h1width/2 - logowidth/2
+    // Simpler: aim for top-center and let it settle
+    var targetX = centerX - 30; // slightly left of center (logo mark is left of h1)
+    var targetY = headerTop;
+
+    ahFly.style.transition = 'left 1.0s cubic-bezier(.4,0,.15,1), top 1.0s cubic-bezier(.4,0,.15,1), transform 1.0s cubic-bezier(.4,0,.15,1), opacity 0.3s ease 0.7s';
+    ahFly.style.left = targetX + 'px';
+    ahFly.style.top = targetY + 'px';
+    ahFly.style.transform = 'translate(-50%,-50%) scale(0.22)';
+    ahFly.style.opacity = '0';
+  }, 100);
+
+  // Phase 3: expand lens
+  setTimeout(function(){
+    ls.classList.add('lens-expand');
+  }, 600);
+
+  // Phase 4: reveal site, trigger header animation
+  setTimeout(function(){
+    sessionStorage.setItem('role', role);
+    document.getElementById('site').style.display = 'block';
+    if (role === 'admin') {
+      document.body.classList.add('admin');
+      document.getElementById('ab').classList.add('on');
+    }
+    buildAll();
+    setupEvents();
+    setupScrollbar();
+    loadPhotos();
+    // Animate header elements in
+    setTimeout(function(){
+      hLogo.classList.add('visible');
+      h1.classList.add('visible');
+    }, 100);
+  }, 1400);
+
+  // Phase 5: remove login screen
+  setTimeout(function(){
+    ls.classList.add('scene-exit');
+    setTimeout(function(){ ls.style.display = 'none'; ahFly.style.display = 'none'; }, 500);
+  }, 1600);
 }
+// ── END CINEMATIC LOGIN ───────────────────────────────────
 function doLogout() { sessionStorage.removeItem('role'); location.reload(); }
 function toggleSumm() { document.getElementById('sw').classList.toggle('op'); }
 function setSize(btn) {
@@ -985,6 +1222,19 @@ var PROPS = [
   {id:'p14',num:'TRH-014',tags:'intl future',name:'Playa Yankee 42',nick:'Playa Yankee 42',addr:'Playa Yankee, Nicaragua · Pacific',type:'Pacific Parcel',rl:'International · Pacific',svg:SVG.nic,beds:0,baths:0,sqft:0,ev:0,plate:'<div class="mplate"><div class="mpname big">PLAYA YANKEE 42</div><div class="mpest">An ANAND Home &middot; Est. 2016</div></div>',lnote:'Volcanic lake views · Jungle setting · Pacific coast · Separate from SJDS parcel',rev:{t:'fut',rows:[{l:'STR Potential',v:25000,c:'inc'}],proj:'Lush jungle setting · Unique STR product'},exp:{pp:25000,lb:0,rate:'--',balloon:'--',pi:0,tax:0,ins:0,maint:0,mgmt:0}},
   {id:'p15',num:'TRH-015',tags:'intl future',name:'San Felipe',nick:'San Felipe',addr:'Baja Peninsula, Mexico · Sea of Cortez',type:'1/4 Ownership · Mexico',rl:'The Original · 2003',svg:SVG.baja,beds:0,baths:0,sqft:0,ev:0,plate:'<div class="mplate"><div class="mpname">SAN FELIPE</div><div class="mpest">An ANAND Home &middot; Est. 2003</div></div>',lnote:'1/4 ownership · The oldest ANAND holding · Overlooking Sea of Cortez · Baja Peninsula',rev:{t:'fut',rows:[{l:'Est. Share Value',v:0,c:'proj'}],proj:'Original 2003 acquisition · TBD current value'},exp:{pp:15000,lb:0,rate:'--',balloon:'--',pi:0,tax:0,ins:0,maint:0,mgmt:0}}
 ];
+
+function doGo(role) {
+  sessionStorage.setItem('role', role);
+  document.getElementById('ls').style.display = 'none';
+  document.getElementById('site').style.display = 'block';
+  document.getElementById('h-logo').classList.add('visible');
+  document.getElementById('h1-text').classList.add('visible');
+  if (role === 'admin') { document.body.classList.add('admin'); document.getElementById('ab').classList.add('on'); }
+  buildAll();
+  setupEvents();
+  setupScrollbar();
+  loadPhotos();
+}
 
 (function checkSession() {
   var r = sessionStorage.getItem('role');
